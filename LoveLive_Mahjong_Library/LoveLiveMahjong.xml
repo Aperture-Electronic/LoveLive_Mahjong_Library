@@ -1,0 +1,742 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<datasheet>
+  <content>Love Live Mahjong Card's Attributes</content>
+  <version>1.0.0.0</version>
+  <update>20190218</update>
+
+  <types>
+    <type name="Char" />
+    <type name="Group" />
+    <type name="Assist" />
+    <type name="Assgp" />
+  </types>
+  
+  <groups>
+    <group name="Muse" />
+    <group name="Aqours" />
+    <group name="Nijigasaki" />
+  </groups>
+
+  <squads>
+    <squad name="Printemps" />
+    <squad name="BiBi" />
+    <squad name="LilyWhite" />
+    <squad name="CYaRon" />
+    <squad name="GulityKiss" />
+    <squad name="AZALEA" />
+    <squad name="Fanmitsu" />
+    <squad name="Dengeki" />
+    <squad name="SIF" />
+  </squads>
+
+  <grades>
+    <grade name="1" />
+    <grade name="2" />
+    <grade name="3" />
+  </grades>
+  
+  <!--牌种-->
+  <cards>
+    <card>
+      <name>Honoka</name>
+      <c_name>穂乃果</c_name>
+      <yao9>true</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>Printemps</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Eli</name>
+      <c_name>絵里</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>BiBi</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Kotori</name>
+      <c_name>ことり</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>Printemps</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Umi</name>
+      <c_name>海未</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>LilyWhite</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Rin</name>
+      <c_name>凛</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>LilyWhite</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Maki</name>
+      <c_name>真姫</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>BiBi</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Nozomi</name>
+      <c_name>希</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>LilyWhite</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Hanayo</name>
+      <c_name>花陽</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>Printemps</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Nico</name>
+      <c_name>にこ</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Muse</group>
+      <squad>BiBi</squad>
+      <grade>3</grade>
+      <treasure>true</treasure>
+    </card>
+
+    <card>
+      <name>Chika</name>
+      <c_name>千歌</c_name>
+      <yao9>true</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>CYaRon</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Riko</name>
+      <c_name>梨子</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>GulityKiss</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Kanan</name>
+      <c_name>果南</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>AZALEA</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Dia</name>
+      <c_name>ダイヤ</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>AZALEA</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>You</name>
+      <c_name>曜</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>CYaRon</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+    
+    <card>
+      <name>Yoshiko</name>
+      <c_name>善子</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>GulityKiss</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Hanamaru</name>
+      <c_name>花丸</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>AZALEA</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+    
+    <card>
+      <name>Mari</name>
+      <c_name>鞠莉</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>GulityKiss</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+    
+    <card>
+      <name>Ruby</name>
+      <c_name>ルビィ</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Aqours</group>
+      <squad>CYaRon</squad>
+      <grade>1</grade>
+      <treasure>true</treasure>
+    </card>
+
+    <card>
+      <name>Ayu</name>
+      <c_name>歩夢</c_name>
+      <yao9>true</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Fanmitsu</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+    
+    <card>
+      <name>Kasumi</name>
+      <c_name>霞</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Dengeki</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Shizuku</name>
+      <c_name>雫</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>SIF</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Karin</name>
+      <c_name>果林</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Dengeki</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+    
+    <card>
+      <name>Ai</name>
+      <c_name>愛</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Fanmitsu</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Kanata</name>
+      <c_name>彼方</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>SIF</squad>
+      <grade>3</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Setsuna</name>
+      <c_name>雪菜</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Dengeki</squad>
+      <grade>2</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Emma</name>
+      <c_name>エマ</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>SIF</squad>
+      <grade>3</grade>
+      <treasure>true</treasure>
+    </card>
+
+    <card>
+      <name>Rina</name>
+      <c_name>璃奈</c_name>
+      <yao9>false</yao9>
+      <type>Char</type>
+      <group>Nijigasaki</group>
+      <squad>Fanmitsu</squad>
+      <grade>1</grade>
+      <treasure>false</treasure>
+    </card>
+
+    <card>
+      <name>Tsubasa</name>
+      <c_name>ツバサ</c_name>
+      <yao9>true</yao9>
+      <type>Assist</type>
+      <group>ARISE</group>
+    </card>
+
+    <card>
+      <name>Erena</name>
+      <c_name>英玲奈</c_name>
+      <yao9>true</yao9>
+      <type>Assist</type>
+      <group>ARISE</group>
+    </card>
+
+    <card>
+      <name>Anju</name>
+      <c_name>杏樹</c_name>
+      <yao9>true</yao9>
+      <type>Assist</type>
+      <group>ARISE</group>
+    </card>
+
+    <card>
+      <name>Seira</name>
+      <c_name>聖良</c_name>
+      <yao9>true</yao9>
+      <type>Assist</type>
+      <group>SaintSnow</group>
+    </card>
+
+    <card>
+      <name>Ria</name>
+      <c_name>理亜</c_name>
+      <yao9>true</yao9>
+      <type>Assist</type>
+      <group>SaintSnow</group>
+    </card>
+
+    <card>
+      <name>Muse</name>
+      <c_name>μ's</c_name>
+      <yao9>true</yao9>
+      <type>Group</type>
+      <group>Muse</group>
+    </card>
+
+    <card>
+      <name>Aqours</name>
+      <c_name>Aqours</c_name>
+      <yao9>true</yao9>
+      <type>Group</type>
+      <group>Aqours</group>
+    </card>
+
+    <card>
+      <name>Nijigasaki</name>
+      <c_name>虹ヶ咲学園スクールアイドル同好会</c_name>
+      <yao9>true</yao9>
+      <type>Group</type>
+      <group>Nijigasaki</group>
+    </card>
+
+    <card>
+      <name>ARISE</name>
+      <c_name>A-RISE</c_name>
+      <yao9>true</yao9>
+      <type>Assgp</type>
+      <group>ARISE</group>
+    </card>
+
+    <card>
+      <name>SaintSnow</name>
+      <c_name>Saint Snow</c_name>
+      <yao9>true</yao9>
+      <type>Assgp</type>
+      <group>SaintSnow</group>
+    </card>
+  </cards>
+
+  <!--番役-->
+  <yakus>
+    <yaku>
+      <name>Dora</name>
+      <c_name>宝牌</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Ridora</name>
+      <c_name>里宝牌</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Akdora</name>
+      <c_name>赤宝牌</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Richi</name>
+      <c_name>立直</c_name>
+      <level>1</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Ippatsu</name>
+      <c_name>一発</c_name>
+      <level>1</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+    
+    <yaku>
+      <name>Tsumo</name>
+      <c_name>門前清自摸和</c_name>
+      <level>1</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+    
+    <yaku>
+      <name>Pinfu</name>
+      <c_name>平和</c_name>
+      <level>1</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Ipeko</name>
+      <c_name>一盃口</c_name>
+      <level>1</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+    
+    <yaku>
+      <name>Char</name>
+      <c_name>キャラ純</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Yaku</name>
+      <c_name>役牌</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Danyao</name>
+      <c_name>断ヤオ</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Kong</name>
+      <c_name>搶槓</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Saki</name>
+      <c_name>嶺上開花</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Sea</name>
+      <c_name>海底摸月</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>River</name>
+      <c_name>河底撈魚</c_name>
+      <level>1</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>DoubleRichi</name>
+      <c_name>ダブル立直</c_name>
+      <level>2</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>SameGrade</name>
+      <c_name>三団同年</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>true</furun>
+    </yaku>
+    
+    <yaku>
+      <name>Chitoi</name>
+      <c_name>七対子</c_name>
+      <level>2</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Toitoi</name>
+      <c_name>対々和</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>true</furun>
+    </yaku>
+
+    <yaku>
+      <name>Anko3</name>
+      <c_name>三暗刻</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+    
+    <yaku>
+      <name>Kong3</name>
+      <c_name>三槓子</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Honoshi</name>
+      <c_name>混単推し</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Saint</name>
+      <c_name>Saint Snow</c_name>
+      <level>2</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Leader</name>
+      <c_name>リーダー推し</c_name>
+      <level>3</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Arise</name>
+      <c_name>A-RISE</c_name>
+      <level>3</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Nipeko</name>
+      <c_name>二盃口</c_name>
+      <level>3</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Group</name>
+      <c_name>団体単推し</c_name>
+      <level>5</level>
+      <nofuru>false</nofuru>
+      <furun>true</furun>
+    </yaku>
+
+    <yaku>
+      <name>Zenryoku</name>
+      <c_name>全力応援</c_name>
+      <level>5</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Nagashi</name>
+      <c_name>流し満貫</c_name>
+      <level>5</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Junsei</name>
+      <c_name>純正単推し</c_name>
+      <level>6</level>
+      <nofuru>false</nofuru>
+      <furun>true</furun>
+    </yaku>
+
+    <yaku>
+      <name>DD</name>
+      <c_name>誰でも大好き</c_name>
+      <level>13</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Anko4</name>
+      <c_name>四暗刻</c_name>
+      <level>13</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Daisangen</name>
+      <c_name>三団体推し</c_name>
+      <level>13</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Kong4</name>
+      <c_name>四槓子</c_name>
+      <level>13</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Ouen</name>
+      <c_name>応援推し</c_name>
+      <level>13</level>
+      <nofuru>false</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Tenho</name>
+      <c_name>天和</c_name>
+      <level>13</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Chiho</name>
+      <c_name>地和</c_name>
+      <level>13</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Anko4Ouen</name>
+      <c_name>応援四暗刻</c_name>
+      <level>26</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>Anko4Wait1</name>
+      <c_name>四暗刻単騎</c_name>
+      <level>26</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+
+    <yaku>
+      <name>DDWait13</name>
+      <c_name>誰でも大好き十三面待ち</c_name>
+      <level>26</level>
+      <nofuru>true</nofuru>
+      <furun>false</furun>
+    </yaku>
+  </yakus>
+</datasheet>
+
+

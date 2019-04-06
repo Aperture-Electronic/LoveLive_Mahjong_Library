@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LoveLiveMahjong.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LoveLiveMahjong.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MahjongCards.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MahjongCards.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MahjongCards.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MahjongCards.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>
