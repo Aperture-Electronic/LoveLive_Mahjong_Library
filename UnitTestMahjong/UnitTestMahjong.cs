@@ -42,24 +42,24 @@ namespace UnitTestMahjong
         {
             LoveLive_MahjongClass.InitializeMahjongClass();
 
-            // …Ë÷√“ª–©“™∫Õµƒ≈∆
+            // ËÆæÁΩÆ‰∏Ä‰∫õË¶ÅÂíåÁöÑÁâå
             List<MahjongCard> Hand_Cards;
             List<MahjongCardFuru> Furu_Cards;
             Hand_Cards = new List<MahjongCard>()
             {
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Honoka - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Chika - 1 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Ayu - 2 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Anju - 3 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Erena - 3 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Ria - 4 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Seira - 4 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Tsubasa - 3 - 1],
+                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rin - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Maki - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanamaru - 1 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Yoshiko - 1 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Ruby - 1 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Shizuku - 2 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rina - 2 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kasumi - 2 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nico  - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Eli - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Maki - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Aqours - 5 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nijigasaki - 5 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.ARISE - 5 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.SaintSnow - 5 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Muse - 5 - 1],
             };
 
             Furu_Cards = new List<MahjongCardFuru>()
@@ -92,25 +92,25 @@ namespace UnitTestMahjong
         {
             LoveLive_MahjongClass.InitializeMahjongClass();
 
-            // …Ë÷√“ª–©“™∫Õµƒ≈∆
+            // ËÆæÁΩÆ‰∏Ä‰∫õË¶ÅÂíåÁöÑÁâå
             List<MahjongCard> Hand_Cards;
             List<MahjongCardFuru> Furu_Cards;
             Hand_Cards = new List<MahjongCard>()
             {
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rin - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rin - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Maki - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanamaru - 1 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Yoshiko - 1 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Ruby - 1 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Shizuku - 2 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rina - 2 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kasumi - 2 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nico  - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Eli - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Maki - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kanan - 1 - 1],
-                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kanan - 1 - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nico - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nico - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nozomi - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Nozomi - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo  - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Eli - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Eli - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kotori - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Kotori - 1],
             };
 
             Furu_Cards = new List<MahjongCardFuru>()
@@ -126,6 +126,8 @@ namespace UnitTestMahjong
             List<MahjongYaku> yakus = logic.YAKU();
             foreach (MahjongYaku yaku in yakus)
                 Trace.WriteLine(yaku);
+
+            Trace.WriteLine($"ÁÇπÊï∞Ôºö{logic.Points()}");
         }
     }
 }
