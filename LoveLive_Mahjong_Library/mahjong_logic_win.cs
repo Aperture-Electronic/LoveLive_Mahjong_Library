@@ -8,6 +8,7 @@ namespace LoveLive_Mahjong_Library
     partial class MahjongLogic
     {
         public List<MahjongYaku> YAKU() => _Yaku(false, false);
+        public int Points() => _HuPoints(false, false, false, YAKU(), false);
 
         /// <summary>
         /// 表示前一次调用_IsHu函数所计算出的可和牌组
@@ -449,22 +450,18 @@ namespace LoveLive_Mahjong_Library
                     {
                         // 団体単推し
                         query = from hu in huCard
-                                where (hu.cards.First().type == MahjongCardType.Group)
+                                where hu.cards.First().type == MahjongCardType.Group
                                 select hu;
 
-                        subquery = from hu in huCard
-                                   where hu.cards.First().type == MahjongCardType.Char
-                                   select hu;
-
-                        // 四种角色+一种团体
-                        if ((query.Count() == 1) && (subquery.Count() == 4))
+                        // 一种团体
+                        if (query.Count() == 1)
                         {
                             MahjongCardGroupType group_oshi = query.First().cards.First().group; // 记录团体
-                            query = from hu in subquery
-                                    where hu.cards.First().@group == group_oshi
-                                    select hu;
+                            // 剩余的牌全部是同一团体的角色牌
+                            query = from hu in huCard where hu.cards.First().@group != group_oshi select hu;
+                            subquery = from hu in huCard where hu.cards.First().type != MahjongCardType.Char select hu;
 
-                            if (query.Count() == 4) // 角色只有一种团体
+                            if ((query.Count() == 0) && (subquery.Count() == 1)) // 角色只有一种团体
                             {
                                 isGroup = true;
                                 yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Group]);
@@ -474,10 +471,10 @@ namespace LoveLive_Mahjong_Library
 
                     // 六番
                     // 纯正单推
-                    query = from hu in huCard where hu.cards.First().type == MahjongCardType.Char select hu;
-                    if (query.Count() == 5)
+                    query = from hu in huCard where hu.cards.First().type != MahjongCardType.Char select hu;
+                    if (query.Count() == 0) // 只有角色牌
                     {
-                        subquery = from hu in query group hu by hu.cards.First().@group into g select g.First();
+                        subquery = from hu in huCard group hu by hu.cards.First().@group into g select g.First();
                         if (subquery.Count() == 1)
                         {
                             isGroup = true;
@@ -709,6 +706,22 @@ namespace LoveLive_Mahjong_Library
                         }
                     }
                 }
+                else
+                {
+                    // 有役满以上，检查并删除七对子
+                    if (isChitoi)
+                    {
+                        for (int i = 0; i < yakus.Count; i++)
+                        {
+                            if (yakus[i].type == MahjongYakuType.Chitoi)
+                            {
+                                yakus.RemoveAt(i);
+                                break;
+                            }
+                        }
+                        isChitoi = false;
+                    }
+                }
             }
 
             // 检查状态役
@@ -727,16 +740,140 @@ namespace LoveLive_Mahjong_Library
         /// <returns>状态役表</returns>
         private List<MahjongYaku> _StatusYaku(bool Yakuman)
         {
+            // 状况役：与手牌无关，与场上状况有关的役 
+            // 行为役：立直 門前清自摸和 ダブル立直
+            // 偶然役：一発 搶槓 嶺上開花 海底摸月 河底撈魚 ダブル立直 天和 地和
+            // 特殊役：流し満貫
+            if (Yakuman)
+            {
+                // 役满以上，只计算天和，地和
+
+            }
+            else
+            {
+                
+            }
+
             return new List<MahjongYaku>();
         }
 
         /// <summary>
-        /// 符的计算
+        /// 符数计算
         /// </summary>
+        /// <param name="chitoi">七对子</param>
         /// <returns>符数</returns>
-        private int _Fu()
+        private int _Fu(bool chitoi)
         {
-            return 40;
+            int fu = chitoi ? 25 : 20;
+            int fu_add;
+
+            // 遍历所有的和种
+            foreach (HuCard hu in huCard)
+            {
+                if (hu.type == HuCardType.PongKong)
+                {
+                    // 刻子和杠子
+                    fu_add = 2; // 两符起算
+                    if (hu.cards.Count == 4) fu_add *= 4; // 杠子: 4倍
+                    if (hu.furu == false) fu_add *= 2; // 暗刻/暗杠: 2倍
+                    if (hu.cards[0].Yao9 == true) fu_add *= 2; // 幺九: 2倍
+
+                    fu += fu_add;
+                }
+
+                if (hu.type == HuCardType.Finch)
+                {
+                    if (hu.cards[0].Yao9 == true) fu += 2;
+                }
+            }
+
+            // 向上取整到十位
+            fu = (int)(10 * Math.Ceiling(fu / 10.0));
+
+            return fu;
+        }
+
+        /// <summary>
+        /// 番数计算
+        /// </summary>
+        /// <param name="yakus">役种</param>
+        /// <param name="furu">副露状态</param>
+        /// <returns></returns>
+        private int _Ban(List<MahjongYaku> yakus, bool furu)
+        {
+            int ban = 0;
+            foreach (MahjongYaku yaku in yakus)
+            {
+                if (furu && yaku.furu_n) ban += yaku.level - 1;  //部分役种副露减一番
+                else ban += yaku.level;
+            }
+
+            return ban;
+
+        }
+
+        /// <summary>
+        /// 点数计算
+        /// </summary>
+        /// <param name="order">是否是庄家</param>
+        /// <param name="tsumo">是否自摸</param>
+        /// <param name="tsumo_order">自摸者是否庄家</param>
+        /// <param name="yakus">役种</param>
+        /// <param name="furu">副露状态</param>
+        /// <returns></returns>
+        private int _HuPoints(bool order, bool tsumo, bool tsumo_order, List<MahjongYaku> yakus, bool furu)
+        {
+            // 点数公式 100 * 向上取整(a*b*2^(c+2)/100)
+            // a: 庄闲系数 b:符数 c: 番数
+            int a, b, c;
+            if (tsumo)  // 自摸
+                if (tsumo_order)
+                    a = 2;
+                else
+                {
+                    if (order) a = 2;
+                    else a = 1;
+                }
+            else
+            {
+                // 荣和
+                if (order) a = 6;
+                else a = 4;
+            }
+
+            // 先算番数
+            c = _Ban(yakus, furu);
+
+            if (c < 5)
+            {
+                // 5番（满贯）以下
+
+                IEnumerable<MahjongYaku> chitoi = from yaku in yakus where yaku.type == MahjongYakuType.Chitoi select yaku;
+                b = _Fu(chitoi.Count() > 0);
+
+                double e = a * b * Math.Pow(2, c + 2) / 100.0;
+
+                return 100 * (int)Math.Ceiling(e);
+            }
+
+            // 满贯以上
+            switch(c)
+            {
+                case 5:
+                case 6:
+                    return a * 2000; // 满贯
+                case 7:
+                case 8:
+                    return a * 3000; // 跳满
+                case 9:
+                case 10:
+                    return a * 4000; // 倍满
+                case 11:
+                case 12:
+                    return a * 6000; // 三倍满
+                default:
+                    return a * 8000 * (c / 13); //役满以上
+            }
         }
     }
 }
