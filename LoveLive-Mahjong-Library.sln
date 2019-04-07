@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoveLive_Mahjong_Library", "LoveLive_Mahjong_Library\LoveLive_Mahjong_Library.csproj", "{8BCBCDBD-05CB-4D38-9EBF-3ACE6CCB224F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoveLive-Mahjong-Library", "LoveLive_Mahjong_Library\LoveLive-Mahjong-Library.csproj", "{8BCBCDBD-05CB-4D38-9EBF-3ACE6CCB224F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMahjong", "UnitTestMahjong\UnitTestMahjong.csproj", "{B75FCAB8-5290-449F-A063-C542750ABFFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestMahjong", "UnitTestMahjong\UnitTestMahjong.csproj", "{B75FCAB8-5290-449F-A063-C542750ABFFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
