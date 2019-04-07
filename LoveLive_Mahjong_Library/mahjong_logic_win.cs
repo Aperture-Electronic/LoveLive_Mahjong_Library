@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace LoveLive_Mahjong_Library
 {
-    partial class MahjongLogic
+    public partial class MahjongLogic
     {
         public List<MahjongYaku> YAKU() => _Yaku(false, false);
         public int Points() => _HuPoints(false, false, false, YAKU(), false);
@@ -14,7 +13,7 @@ namespace LoveLive_Mahjong_Library
         /// 表示前一次调用_IsHu函数所计算出的可和牌组
         /// 请在使用_IsHu后立即调用以免数据被覆盖
         /// </summary>
-        private List<HuCard> huCard = new List<HuCard>();
+        private readonly List<HuCard> huCard = new List<HuCard>();
 
         // 和牌判定和番役计算
         public bool Waiting(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards) => _IsHu(Hand_Cards, Furu_Cards);
@@ -34,11 +33,20 @@ namespace LoveLive_Mahjong_Library
                 List<MahjongCard> new_hand_cards = new List<MahjongCard>(Hand_Cards);
                 new_hand_cards.Add(LoveLive_MahjongClass.CardInfo[i]);
                 bool Hu = _IsHu(new_hand_cards, Furu_Cards);
-                if (Hu) waiting.Add(LoveLive_MahjongClass.CardInfo[i]);
+                if (Hu)
+                {
+                    waiting.Add(LoveLive_MahjongClass.CardInfo[i]);
+                }
             }
 
-            if (waiting.Count > 0) return true;
-            else return false;
+            if (waiting.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -56,7 +64,10 @@ namespace LoveLive_Mahjong_Library
             huCard.Clear();
 
             // 判断数量
-            if (hand_cards.Count + furu_cards.Count * 3 < 14) return false;
+            if (hand_cards.Count + furu_cards.Count * 3 < 14)
+            {
+                return false;
+            }
 
             // 计算两个特殊役种：七对子，十三幺
             if (Furu_Cards.Count == 0)
@@ -129,13 +140,13 @@ namespace LoveLive_Mahjong_Library
                     hu_cards.RemoveAt(i);
 
                     // 避免重复，跳过同种的其他牌
-                    i += finch.Count() - 1; 
+                    i += finch.Count() - 1;
 
                     // 判断和牌
                     if (_IsHu(hu_cards))
                     {
                         // 将副露区的牌加入和牌牌组
-                        foreach(MahjongCardFuru furu in Furu_Cards)
+                        foreach (MahjongCardFuru furu in Furu_Cards)
                         {
                             HuCard hu = new HuCard
                             {
@@ -166,7 +177,7 @@ namespace LoveLive_Mahjong_Library
                         return true;
                     }
                 }
-            }                 
+            }
 
             return false;
         }
@@ -186,8 +197,15 @@ namespace LoveLive_Mahjong_Library
         /// <returns>是否和牌</returns>
         private bool _IsHu(List<MahjongCard> cards, int start)
         {
-            if (cards.Count == 0) return true; // 空牌和
-            if (cards.Count < 3) return false; // 剩牌不和
+            if (cards.Count == 0)
+            {
+                return true; // 空牌和
+            }
+
+            if (cards.Count < 3)
+            {
+                return false; // 剩牌不和
+            }
 
             // 针对第一张牌开始寻找刻子和顺子
             IEnumerable<MahjongCard> u = from card in cards where card.name == cards[start].name select card;
@@ -205,7 +223,10 @@ namespace LoveLive_Mahjong_Library
                 huCard.Add(hucard);
 
                 // 删除这个刻子
-                for (int m = 0; m < 3; m++) cards.RemoveAt(start);
+                for (int m = 0; m < 3; m++)
+                {
+                    cards.RemoveAt(start);
+                }
 
                 // 递归判和
                 return _IsHu(cards);
@@ -217,7 +238,7 @@ namespace LoveLive_Mahjong_Library
                     return _IsHu(cards, start + 1);
                 }
                 else
-                { 
+                {
                     // 寻找顺子（年级和小组顺子）
                     MahjongCard cur_card = u.First();
 
@@ -252,7 +273,10 @@ namespace LoveLive_Mahjong_Library
                                 GradeOrSquad = true;
                                 determine = same_squad;   // 判断同小队
                             }
-                            else return false;
+                            else
+                            {
+                                return false;
+                            }
 
                             // 每种牌只找出一张
                             IEnumerable<MahjongCard> not_same = from card in determine group card by card.name into g select g.First();
@@ -277,7 +301,10 @@ namespace LoveLive_Mahjong_Library
                                     if ((cards[i].name == cur_card.name) && p) { p = false; cards.RemoveAt(i); i--; continue; }
                                     if ((cards[i].name == not_same_cards[0].name) && q) { q = false; cards.RemoveAt(i); i--; continue; }
                                     if ((cards[i].name == not_same_cards[1].name) && r) { r = false; cards.RemoveAt(i); i--; continue; }
-                                    if (!(p || q || r)) break;
+                                    if (!(p || q || r))
+                                    {
+                                        break;
+                                    }
                                 }
 
                                 // 递归判和
@@ -324,9 +351,13 @@ namespace LoveLive_Mahjong_Library
             {
                 // 确定十三幺性质（十三面/正常十三幺）
                 if (TankiOrW13)
+                {
                     yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.DDWait13]);
+                }
                 else
+                {
                     yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.DD]);
+                }
 
                 // 返回
                 return yakus;
@@ -345,8 +376,14 @@ namespace LoveLive_Mahjong_Library
 
                 // 确定副露状态
                 query = from hu in huCard where hu.furu == true select hu;
-                if (query.Count() > 0) isFuru = true; // 有副露行为，是副露状态
-                else isFuru = false; // 没有副露行为，是门前清状态
+                if (query.Count() > 0)
+                {
+                    isFuru = true; // 有副露行为，是副露状态
+                }
+                else
+                {
+                    isFuru = false; // 没有副露行为，是门前清状态
+                }
 
                 // 由高到低确定番役
                 // 计算刻子数
@@ -415,10 +452,14 @@ namespace LoveLive_Mahjong_Library
                             else
                             {
                                 isYakuman = true;
-                                if(TankiOrW13)
+                                if (TankiOrW13)
+                                {
                                     yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Anko4Wait1]); // 四暗刻单骑
+                                }
                                 else
+                                {
                                     yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Anko4]); // 四暗刻
+                                }
                             }
                         }
                     }
@@ -595,7 +636,9 @@ namespace LoveLive_Mahjong_Library
                             if (subquery.Count() == 1)
                             {
                                 if ((from hu in huCard where (hu.type == HuCardType.Finch) select hu.cards.First()).First().type != MahjongCardType.Char)
+                                {
                                     yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Honoshi]);
+                                }
                             }
                         }
 
@@ -653,7 +696,10 @@ namespace LoveLive_Mahjong_Library
                     query = from hu in huCard
                             where (hu.cards.First().type == MahjongCardType.Char) || (hu.cards.First().type == MahjongCardType.Assist)
                             select hu;
-                    if (query.Count() == 5) yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Char]);
+                    if (query.Count() == 5)
+                    {
+                        yakus.Add(LoveLive_MahjongClass.YakuInfo[(int)MahjongYakuType.Char]);
+                    }
 
                     // 断幺九
                     bool danyau = true;
@@ -751,7 +797,7 @@ namespace LoveLive_Mahjong_Library
             }
             else
             {
-                
+
             }
 
             return new List<MahjongYaku>();
@@ -774,16 +820,30 @@ namespace LoveLive_Mahjong_Library
                 {
                     // 刻子和杠子
                     fu_add = 2; // 两符起算
-                    if (hu.cards.Count == 4) fu_add *= 4; // 杠子: 4倍
-                    if (hu.furu == false) fu_add *= 2; // 暗刻/暗杠: 2倍
-                    if (hu.cards[0].Yao9 == true) fu_add *= 2; // 幺九: 2倍
+                    if (hu.cards.Count == 4)
+                    {
+                        fu_add *= 4; // 杠子: 4倍
+                    }
+
+                    if (hu.furu == false)
+                    {
+                        fu_add *= 2; // 暗刻/暗杠: 2倍
+                    }
+
+                    if (hu.cards[0].Yao9 == true)
+                    {
+                        fu_add *= 2; // 幺九: 2倍
+                    }
 
                     fu += fu_add;
                 }
 
                 if (hu.type == HuCardType.Finch)
                 {
-                    if (hu.cards[0].Yao9 == true) fu += 2;
+                    if (hu.cards[0].Yao9 == true)
+                    {
+                        fu += 2;
+                    }
                 }
             }
 
@@ -804,8 +864,14 @@ namespace LoveLive_Mahjong_Library
             int ban = 0;
             foreach (MahjongYaku yaku in yakus)
             {
-                if (furu && yaku.furu_n) ban += yaku.level - 1;  //部分役种副露减一番
-                else ban += yaku.level;
+                if (furu && yaku.furu_n)
+                {
+                    ban += yaku.level - 1;  //部分役种副露减一番
+                }
+                else
+                {
+                    ban += yaku.level;
+                }
             }
 
             return ban;
@@ -827,18 +893,34 @@ namespace LoveLive_Mahjong_Library
             // a: 庄闲系数 b:符数 c: 番数
             int a, b, c;
             if (tsumo)  // 自摸
+            {
                 if (tsumo_order)
+                {
                     a = 2;
+                }
                 else
                 {
-                    if (order) a = 2;
-                    else a = 1;
+                    if (order)
+                    {
+                        a = 2;
+                    }
+                    else
+                    {
+                        a = 1;
+                    }
                 }
+            }
             else
             {
                 // 荣和
-                if (order) a = 6;
-                else a = 4;
+                if (order)
+                {
+                    a = 6;
+                }
+                else
+                {
+                    a = 4;
+                }
             }
 
             // 先算番数
@@ -857,7 +939,7 @@ namespace LoveLive_Mahjong_Library
             }
 
             // 满贯以上
-            switch(c)
+            switch (c)
             {
                 case 5:
                 case 6:

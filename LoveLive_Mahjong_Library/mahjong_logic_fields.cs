@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LoveLive_Mahjong_Library
 {
-    partial class MahjongLogic
+    public partial class MahjongLogic
     {
         /// <summary>
         /// 专用骰子（随机数生成器）
         /// </summary>
-        Random dice = new Random();
+        private readonly Random dice = new Random();
 
         /// <summary>
         /// 牌山
         /// </summary>
-        private List<MahjongCard> card_stacks = new List<MahjongCard>();
+        private readonly List<MahjongCard> card_stacks = new List<MahjongCard>();
 
-        private PlayerInfo[] player_info = new PlayerInfo[4];
+        private readonly PlayerInfo[] player_info = new PlayerInfo[4];
 
         /// <summary>
         /// 游戏场次
@@ -46,12 +45,12 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 玩家出牌顺序，第一位是庄家
         /// </summary>
-        private int[] order;
+        private readonly int[] order;
 
         /// <summary>
         /// 正在考虑出牌的玩家，0是庄家
         /// </summary>
-        private int playing;
+        private readonly int playing;
 
         /// <summary>
         /// 牌的总数（来自数据库）
