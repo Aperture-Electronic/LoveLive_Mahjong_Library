@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestMahjong", "UnitTestMahjong\UnitTestMahjong.csproj", "{B75FCAB8-5290-449F-A063-C542750ABFFD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoveLive-Mahjong-Library", "LoveLive-Mahjong-Library\LoveLive-Mahjong-Library.csproj", "{E1C0BCCA-95D9-41A6-8E8E-FDEBAF6011FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoveLive_Mahjong_Library", "LoveLive_Mahjong_Library\LoveLive_Mahjong_Library.csproj", "{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{B75FCAB8-5290-449F-A063-C542750ABFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B75FCAB8-5290-449F-A063-C542750ABFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B75FCAB8-5290-449F-A063-C542750ABFFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E1C0BCCA-95D9-41A6-8E8E-FDEBAF6011FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1C0BCCA-95D9-41A6-8E8E-FDEBAF6011FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1C0BCCA-95D9-41A6-8E8E-FDEBAF6011FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1C0BCCA-95D9-41A6-8E8E-FDEBAF6011FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
