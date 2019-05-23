@@ -957,5 +957,13 @@ namespace LoveLive_Mahjong_Library
                     return a * 8000 * (c / 13); //役满以上
             }
         }
+
+        /// <summary>
+        /// 能够鸣牌计算
+        /// </summary>
+        private void _CanFuru()
+        {
+
+        }
     }
 }

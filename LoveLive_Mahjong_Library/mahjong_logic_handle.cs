@@ -101,6 +101,9 @@ namespace LoveLive_Mahjong_Library
                 // 从手牌中删除这张牌
                 player_onhand.Remove(card_to_play.First());
 
+                // 向游戏线程发送完成请求
+                gameStatusMachine.SetStatus(GameStatusMachine.Status.SendPlayerOperate);
+
                 return true;
             }
 

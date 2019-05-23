@@ -129,5 +129,17 @@ namespace UnitTestMahjong
 
             Trace.WriteLine($"点数：{logic.Points()}");
         }
+
+        [TestMethod]
+        public void TestGaming()
+        {
+            LoveLive_MahjongClass.InitializeMahjongClass();
+
+            MahjongLogic mahjongLogic = new MahjongLogic();
+
+            mahjongLogic.StartGamingThread();
+
+            mahjongLogic.gameStatusMachine.DirectlyExit();
+        }
     }
 }
