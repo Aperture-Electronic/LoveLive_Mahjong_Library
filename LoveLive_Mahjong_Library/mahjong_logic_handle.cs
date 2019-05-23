@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LoveLive_Mahjong_Library
 {
@@ -65,7 +64,15 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         /// <param name="player">玩家编号（按照外部玩家编号）</param>
         /// <returns></returns>
-        public List<MahjongCard> GetPlayerCardOnHand(int player) => player_info[player].card_onhand;
+        public List<MahjongCard> GetPlayerCardOnHand(int player)
+        {
+            return player_info[player].card_onhand;
+        }
+
+        private List<MahjongCard> GetPlayerCardPlayed(int player)
+        {
+            return player_info[player].card_played;
+        }
 
         /// <summary>
         /// 打牌
@@ -78,7 +85,21 @@ namespace LoveLive_Mahjong_Library
             // 只有当前的玩家可以打牌
             if (player == Playing)
             {
+                // 获得当前玩家手牌
+                List<MahjongCard> player_onhand = GetPlayerCardOnHand(player);
 
+                // 只能从手牌中打出牌来
+                IEnumerable<MahjongCard> card_to_play = from c in player_onhand where c == card select c;
+                if (card_to_play.Count() == 0)
+                {
+                    return false;
+                }
+
+                // 将牌从手牌打到牌河
+                GetPlayerCardPlayed(player).Add(card_to_play.First());
+
+                // 从手牌中删除这张牌
+                player_onhand.Remove(card_to_play.First());
 
                 return true;
             }

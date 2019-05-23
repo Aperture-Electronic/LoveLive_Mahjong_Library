@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace LoveLive_Mahjong_Library
@@ -11,7 +10,7 @@ namespace LoveLive_Mahjong_Library
     /// <summary>
     /// 牌名（顺序用于确定宝牌）
     /// </summary>
-   public enum MahjongCardName
+    public enum MahjongCardName
     {
         // μ's
         Honoka = 0x01,
@@ -115,7 +114,7 @@ namespace LoveLive_Mahjong_Library
     /// <summary>
     /// 麻将牌（通用类）
     /// </summary>
-    public class MahjongCard
+    public struct MahjongCard : IEquatable<MahjongCard>
     {
         /// <summary>
         /// 牌面
@@ -135,14 +134,22 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 是否幺九
         /// </summary>
-        public bool Yao9;
+        public bool yao9;
 
         /// <summary>
         /// 宝牌
         /// 初始宝牌只有非幺九牌有效
         /// 宝牌等级计算累加宝牌，0不是宝牌
         /// </summary>
-        public int Treasure;
+        public int treasure;
+
+        /// <summary>
+        /// 为当前牌添加宝牌等级（只影响当前实例）
+        /// </summary>
+        public void AddTreasure()
+        {
+            treasure++;
+        }
 
         // 只有角色牌有效的属性
         /// <summary>
@@ -160,10 +167,35 @@ namespace LoveLive_Mahjong_Library
         /// 团体
         /// </summary>
         public MahjongCardGroupType group;
-        
+
         public override string ToString()
         {
             return c_name;
+        }
+
+        public bool Equals(MahjongCard other)
+        {
+            return (name == other.name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals((MahjongCard)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public static bool operator ==(MahjongCard left, MahjongCard right)
+        {
+            return left.name == right.name;
+        }
+
+        public static bool operator !=(MahjongCard left, MahjongCard right)
+        {
+            return left.name != right.name;
         }
     }
 
@@ -191,21 +223,25 @@ namespace LoveLive_Mahjong_Library
                     name = (MahjongCardName)Enum.Parse(typeof(MahjongCardName), card.Element("name").Value),
                     type = (MahjongCardType)Enum.Parse(typeof(MahjongCardType), card.Element("type").Value),
                     c_name = card.Element("c_name").Value,
-                    Yao9 = card.Element("yao9").Value.Equals("true") ? true : false,
+                    yao9 = card.Element("yao9").Value.Equals("true") ? true : false,
                     group = (MahjongCardGroupType)Enum.Parse(typeof(MahjongCardGroupType), card.Element("group").Value),
-            };
+                };
 
 
-                if (mahjongCard.Yao9)
-                    mahjongCard.Treasure = 0;
+                if (mahjongCard.yao9)
+                {
+                    mahjongCard.treasure = 0;
+                }
                 else
-                    mahjongCard.Treasure = card.Element("treasure").Value.Equals("true") ? 1 : 0;
+                {
+                    mahjongCard.treasure = card.Element("treasure").Value.Equals("true") ? 1 : 0;
+                }
 
                 if (mahjongCard.type == MahjongCardType.Char)
                 {
                     mahjongCard.squad = (MahjongCardSquadType)Enum.Parse(typeof(MahjongCardSquadType), card.Element("squad").Value);
-                    mahjongCard.grade = (MahjongCardGradeType)Enum.Parse(typeof(MahjongCardGradeType), $"G{card.Element("grade").Value}"); 
-                }                 
+                    mahjongCard.grade = (MahjongCardGradeType)Enum.Parse(typeof(MahjongCardGradeType), $"G{card.Element("grade").Value}");
+                }
                 CardInfo.Add(mahjongCard);
             }
 
@@ -228,7 +264,7 @@ namespace LoveLive_Mahjong_Library
             }
         }
     }
-     
+
     /// <summary>
     /// 麻将场次
     /// </summary>
@@ -288,7 +324,7 @@ namespace LoveLive_Mahjong_Library
     /// </summary>
     public class MahjongCardFuru
     {
-        public MahjongCard this[int index]  => cards[index];
+        public MahjongCard this[int index] => cards[index];
 
         /// <summary>
         /// 副露的牌
@@ -487,9 +523,19 @@ namespace LoveLive_Mahjong_Library
         public override string ToString()
         {
             string f;
-            if (level < 13) f = $"{level}番";
-            else if (level == 13) f = "役满";
-            else f = "二倍满";
+            if (level < 13)
+            {
+                f = $"{level}番";
+            }
+            else if (level == 13)
+            {
+                f = "役满";
+            }
+            else
+            {
+                f = "二倍满";
+            }
+
             return $"[{f}] {c_name}";
         }
     }
@@ -544,7 +590,7 @@ namespace LoveLive_Mahjong_Library
         public override string ToString()
         {
             return $"牌组类型：{Enum.GetName(typeof(HuCardType), type)}，副露 = {furu}," +
-                $" 牌组={string.Join(",",cards.Select(card => card.ToString()).ToArray())}";
+                $" 牌组={string.Join(",", cards.Select(card => card.ToString()).ToArray())}";
         }
     }
 
@@ -621,16 +667,24 @@ namespace LoveLive_Mahjong_Library
         public void SetTreasureCard(MahjongCardName cardName)
         {
             // 手牌中的宝牌
-            for(int i = 0; i < card_onhand.Count; i++)
+            for (int i = 0; i < card_onhand.Count; i++)
             {
-                if (card_onhand[i].name == cardName) card_onhand[i].Treasure++;
+                if (card_onhand[i].name == cardName)
+                {
+                    card_onhand[i].AddTreasure();
+                }
             }
 
             // 副露里的宝牌
             for (int i = 0; i < card_furu.Count; i++)
             {
                 for (int j = 0; j < card_furu[i].cards.Count; j++)
-                    if (card_furu[i].cards[j].name == cardName) card_furu[i].cards[j].Treasure++;
+                {
+                    if (card_furu[i].cards[j].name == cardName)
+                    {
+                        card_furu[i].cards[j].AddTreasure();
+                    }
+                }
             }
         }
 

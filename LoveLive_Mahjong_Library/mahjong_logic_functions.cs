@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace LoveLive_Mahjong_Library
 {
-    partial class MahjongLogic
+    public partial class MahjongLogic
     {
         /// <summary>
         /// 初始化逻辑
@@ -34,9 +33,18 @@ namespace LoveLive_Mahjong_Library
             subscene = 0;
 
             // 设置总场次
-            if (TotalGame == 0) total_game = MahjongGame.East;
-            else if (TotalGame == 1) total_game = MahjongGame.South;
-            else total_game = MahjongGame.North;
+            if (TotalGame == 0)
+            {
+                total_game = MahjongGame.East;
+            }
+            else if (TotalGame == 1)
+            {
+                total_game = MahjongGame.South;
+            }
+            else
+            {
+                total_game = MahjongGame.North;
+            }
 
             // 初始化配点
             for (int i = 0; i < 4; i++)
@@ -60,7 +68,10 @@ namespace LoveLive_Mahjong_Library
             foreach (MahjongCard card in LoveLive_MahjongClass.CardInfo)
             {
                 // 每种牌4张
-                for (int i = 0; i < 4; i++) card_stacks.Add(card);
+                for (int i = 0; i < 4; i++)
+                {
+                    card_stacks.Add(card);
+                }
             }
 
             // 尝试添加随机宝牌
@@ -96,7 +107,9 @@ namespace LoveLive_Mahjong_Library
 
             // 清除所有玩家的手牌、副露和牌河
             for (int i = 0; i < 4; i++)
+            {
                 player_info[i].ClearCards();
+            }
 
             // 按照标准麻将规则摸牌发牌，假设洗牌已经做好开门
             // 从庄家开始，每人每次摸2墩（4张），直到每人摸入12张牌（共摸3次）
@@ -118,7 +131,11 @@ namespace LoveLive_Mahjong_Library
             }
 
             // 最后摸牌顺序庄家->闲I->II->III->庄家
-            for (int i = 0; i < 4; i++) player_info[order[i]].AddHandCard(TouchCard());
+            for (int i = 0; i < 4; i++)
+            {
+                player_info[order[i]].AddHandCard(TouchCard());
+            }
+
             player_info[order[0]].AddHandCard(TouchCard());
         }
 
@@ -139,15 +156,29 @@ namespace LoveLive_Mahjong_Library
                 // 如果是角色牌，则使用官方排序
                 // 每种角色9张
                 t = (int)indicator.name + 1;
-                if ((t == 0x0A) || (t == 0x14) || (t == 0x1E)) t -= 9;
+                if ((t == 0x0A) || (t == 0x14) || (t == 0x1E))
+                {
+                    t -= 9;
+                }
             }
             else
             {
                 // 如果是应援角色牌，团体牌，则使用自定义排序
                 t = (int)indicator.name + 1;
-                if (t == 0x22) t -= 3;
-                if (t == 0x25) t -= 2;
-                if (t == 0x31) t -= 5;
+                if (t == 0x22)
+                {
+                    t -= 3;
+                }
+
+                if (t == 0x25)
+                {
+                    t -= 2;
+                }
+
+                if (t == 0x31)
+                {
+                    t -= 5;
+                }
             }
 
             // 从所有的牌中找到宝牌，将其的宝牌等级+1
@@ -155,7 +186,10 @@ namespace LoveLive_Mahjong_Library
             for (int i = 0; i < card_stacks.Count(); i++)
             {
                 // 确认宝牌
-                if (t == (int)card_stacks[i].name) card_stacks[i].Treasure++;
+                if (t == (int)card_stacks[i].name)
+                {
+                    card_stacks[i].AddTreasure();
+                }
             }
 
             // 从手牌和副露里找
@@ -175,6 +209,6 @@ namespace LoveLive_Mahjong_Library
 
             // 添加宝牌指示牌
             _add_treasure_card(card_stacks[j]);
-         }
+        }
     }
 }

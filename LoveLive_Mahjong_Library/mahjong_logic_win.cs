@@ -92,7 +92,7 @@ namespace LoveLive_Mahjong_Library
                 }
 
                 // 十三幺
-                if ((from card in Hand_Cards where card.Yao9 == true select card).Count() == 14)
+                if ((from card in Hand_Cards where card.yao9 == true select card).Count() == 14)
                 {
                     // 将要和的牌加入和牌牌组以便计算番役
                     cards = from card in Hand_Cards group card by card.name into z where z.Count() == 1 select z.First();
@@ -707,7 +707,7 @@ namespace LoveLive_Mahjong_Library
                     {
                         if ((hu.type == HuCardType.Finch) || (hu.type == HuCardType.PongKong))
                         {
-                            if (hu.cards.First().Yao9 == true)
+                            if (hu.cards.First().yao9 == true)
                             {
                                 danyau = false;
                                 break;
@@ -717,7 +717,7 @@ namespace LoveLive_Mahjong_Library
                         {
                             foreach (MahjongCard card in hu.cards)
                             {
-                                if (card.Yao9 == true)
+                                if (card.yao9 == true)
                                 {
                                     danyau = false;
                                     break;
@@ -830,7 +830,7 @@ namespace LoveLive_Mahjong_Library
                         fu_add *= 2; // 暗刻/暗杠: 2倍
                     }
 
-                    if (hu.cards[0].Yao9 == true)
+                    if (hu.cards[0].yao9 == true)
                     {
                         fu_add *= 2; // 幺九: 2倍
                     }
@@ -840,7 +840,7 @@ namespace LoveLive_Mahjong_Library
 
                 if (hu.type == HuCardType.Finch)
                 {
-                    if (hu.cards[0].Yao9 == true)
+                    if (hu.cards[0].yao9 == true)
                     {
                         fu += 2;
                     }
