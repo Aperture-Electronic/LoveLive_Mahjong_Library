@@ -2,41 +2,13 @@ using LoveLive_Mahjong_Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace UnitTestMahjong
 {
     [TestClass]
     public class UnitTestMahjong
     {
-        [TestMethod]
-        public void InitializeMahjongTest()
-        {
-            LoveLive_MahjongClass.InitializeMahjongClass();
-            Assert.AreNotEqual(0, LoveLive_MahjongClass.CardInfo.Count);
-            Trace.WriteLine(LoveLive_MahjongClass.CardInfo.Count);
-        }
-
-        [TestMethod]
-        public void ANewMahjong()
-        {
-            LoveLive_MahjongClass.InitializeMahjongClass();
-
-            MahjongLogic logic = new MahjongLogic();
-
-            logic.NewGame_Handle(25000, 1);
-            logic.NextScene();
-
-            int[] order = logic.PlayerOrder;
-
-            List<MahjongCard> cardA = logic.GetPlayerCardOnHand(order[0]);
-            List<MahjongCard> cardB = logic.GetPlayerCardOnHand(logic.Playing);
-            for(int i = 0; i < cardA.Count; i++)
-            {
-                Trace.WriteLine(cardA[i].name);
-                Trace.WriteLine(cardB[i].name);
-            }
-        }
-
         [TestMethod]
         public void TestLisiten()
         {
@@ -47,7 +19,7 @@ namespace UnitTestMahjong
             List<MahjongCardFuru> Furu_Cards;
             Hand_Cards = new List<MahjongCard>()
             {
-                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo - 1],
+                LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanayo - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Rin - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Maki - 1],
                 LoveLive_MahjongClass.CardInfo[(int)MahjongCardName.Hanamaru - 1 - 1],
@@ -69,16 +41,7 @@ namespace UnitTestMahjong
 
             MahjongLogic logic = new MahjongLogic();
 
-            List<MahjongCard> waiting = new List<MahjongCard>();
-
-            int count = LoveLive_MahjongClass.CardInfo.Count;
-            for (int i = 0; i < count; i++)
-            {
-                List<MahjongCard> new_hand_cards = new List<MahjongCard>(Hand_Cards);
-                new_hand_cards.Add(LoveLive_MahjongClass.CardInfo[i]);
-                bool Hu = logic.Waiting(new_hand_cards, Furu_Cards);
-                if (Hu) waiting.Add(LoveLive_MahjongClass.CardInfo[i]);
-            }
+            List<MahjongCard> waiting = logic.utIsWaiting(Hand_Cards, Furu_Cards);
 
             Trace.WriteLine($"You are waiting for {waiting.Count} cards.");
             foreach (MahjongCard card in waiting)
@@ -120,14 +83,14 @@ namespace UnitTestMahjong
 
             MahjongLogic logic = new MahjongLogic();
 
-            bool Hu = logic.Waiting(Hand_Cards, Furu_Cards);
+            bool Hu = logic.utIsHu(Hand_Cards, Furu_Cards, out List<HuCard> huCards);
             Assert.IsTrue(Hu);
 
-            List<MahjongYaku> yakus = logic.YAKU();
+            List<MahjongYaku> yakus = logic.utCalcYaku(huCards);
             foreach (MahjongYaku yaku in yakus)
                 Trace.WriteLine(yaku);
 
-            Trace.WriteLine($"点数：{logic.Points()}");
+            Trace.WriteLine($"点数：{logic.utCalcHuPoints(huCards)}");
         }
 
         [TestMethod]
@@ -140,6 +103,59 @@ namespace UnitTestMahjong
             mahjongLogic.StartGamingThread();
 
             mahjongLogic.gameStatusMachine.DirectlyExit();
+        }
+
+        [TestMethod]
+        public void TestFuruRon()
+        {
+            LoveLive_MahjongClass.InitializeMahjongClass();
+
+            MahjongLogic mahjongLogic = new MahjongLogic();
+
+            // 反射，强行配置玩家顺序
+            FieldInfo field = mahjongLogic.GetType().GetField("order", BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(mahjongLogic, new int[] { 0, 1, 2, 3 });
+            field = mahjongLogic.GetType().GetField("playing", BindingFlags.NonPublic | BindingFlags.Instance);
+            field.SetValue(mahjongLogic, 3);
+
+            // 配置一些可以副露和荣和的牌组
+            // 玩家A（等待杠Ruby）
+            mahjongLogic.player_info[0].card_onhand = new List<MahjongCard>()
+            {
+                LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby),
+                LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby),
+                LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby),
+            };
+
+            // 玩家A（等待吃Ruby（年级））
+            mahjongLogic.player_info[1].card_onhand = new List<MahjongCard>()
+            {
+                LoveLive_MahjongClass.GetCard(MahjongCardName.Yoshiko),
+                LoveLive_MahjongClass.GetCard(MahjongCardName.Hanamaru),
+            };
+
+            // 玩家C（等待荣Ruby）
+            mahjongLogic.player_info[2].waiting.Add(LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby));
+
+            // 当前D （打出了Ruby）
+            mahjongLogic.player_info[3].card_played.Add(LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby));
+
+            // 判断荣和
+            MethodInfo method = mahjongLogic.GetType().GetMethod("isCanRon", BindingFlags.NonPublic | BindingFlags.Instance);
+            List<RonAble> ronable = method.Invoke(mahjongLogic, null) as List<RonAble>;
+            method = mahjongLogic.GetType().GetMethod("isCanFuru", BindingFlags.NonPublic | BindingFlags.Instance);
+            List<FuruAble> furuable = method.Invoke(mahjongLogic, null) as List<FuruAble>;
+
+            foreach (var ron in ronable)
+            {
+                Trace.WriteLine($"ローン！{ron.RonCard}");
+            }
+
+            foreach (var furu in furuable)
+            {
+                foreach (var e in furu.FuruableList)
+                    Trace.WriteLine($"{e.type}");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 
 namespace LoveLive_Mahjong_Library
 {
@@ -47,9 +48,21 @@ namespace LoveLive_Mahjong_Library
                         break;
                     case GameStatusMachine.Status.SendPlayerOperate:
                         // 获得用户响应，将向其他用户广播其响应
-                        // 判定鸣牌的可能性
+                        // 判定荣和
+                        
 
-                        // 发出可以鸣牌的消息到用户
+                        // 判定鸣牌的可能性
+                        List<FuruAble> Furuables = isCanFuru();
+                        if (Furuables.Count > 0)
+                        {
+                            // 发出可以鸣牌的消息到用户
+                            // 先根据用户分类
+                            var user_canfuru
+                        }
+                        else
+                        {
+                            // 没有可以鸣牌的操作，继续
+                        }
 
                         break;
                     case GameStatusMachine.Status.Exit:

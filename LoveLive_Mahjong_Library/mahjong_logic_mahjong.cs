@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+#define UNITTEST
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,25 +10,22 @@ namespace LoveLive_Mahjong_Library
 {
     public partial class MahjongLogic
     {
-        public List<MahjongYaku> YAKU() => _Yaku(false, false);
-        public int Points() => _HuPoints(false, false, false, YAKU(), false);
-
-        /// <summary>
-        /// 表示前一次调用_IsHu函数所计算出的可和牌组
-        /// 请在使用_IsHu后立即调用以免数据被覆盖
-        /// </summary>
-        private readonly List<HuCard> huCard = new List<HuCard>();
+#if UNITTEST
+        // 单元测试接口
+        public bool utIsHu(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards, out List<HuCard> huCards) => isHu(Hand_Cards, Furu_Cards, out huCards);
+        public List<MahjongYaku> utCalcYaku(List<HuCard> huCards) => calcYaku(huCards, false, false);
+        public int utCalcHuPoints(List<HuCard> huCards) => calcHuPoints(false, false, false, utCalcYaku(huCards), false, huCards);
+        public List<MahjongCard> utIsWaiting(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards) => isWaiting(Hand_Cards, Furu_Cards);
+#endif
 
         // 和牌判定和番役计算
-        public bool Waiting(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards) => _IsHu(Hand_Cards, Furu_Cards);
-
         /// <summary>
         /// 听牌判定（包括无役）
         /// </summary>
         /// <param name="Hand_Cards">手牌</param>
         /// <param name="Furu_Cards">副露牌</param>
         /// <returns>是否可和</returns>
-        private bool _IsWaiting(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards)
+        private List<MahjongCard> isWaiting(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards)
         {
             List<MahjongCard> waiting = new List<MahjongCard>();
 
@@ -34,21 +35,14 @@ namespace LoveLive_Mahjong_Library
                 {
                     LoveLive_MahjongClass.CardInfo[i]
                 };
-                bool Hu = _IsHu(new_hand_cards, Furu_Cards);
+                bool Hu = isHu(new_hand_cards, Furu_Cards, out _);
                 if (Hu)
                 {
                     waiting.Add(LoveLive_MahjongClass.CardInfo[i]);
                 }
             }
 
-            if (waiting.Count > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return waiting;
         }
 
         /// <summary>
@@ -57,13 +51,13 @@ namespace LoveLive_Mahjong_Library
         /// <param name="Hand_Cards">手牌</param>
         /// <param name="Furu_Cards">副露牌</param>
         /// <returns>是否可和</returns>
-        private bool _IsHu(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards)
+        private bool isHu(List<MahjongCard> Hand_Cards, List<MahjongCardFuru> Furu_Cards, out List<HuCard> huCard)
         {
             List<MahjongCard> hand_cards = new List<MahjongCard>(Hand_Cards);
             List<MahjongCardFuru> furu_cards = new List<MahjongCardFuru>(Furu_Cards);
 
             // 清空和牌牌组以便计算番役
-            huCard.Clear();
+            huCard = new List<HuCard>();
 
             // 判断数量
             if (hand_cards.Count + furu_cards.Count * 3 < 14)
@@ -145,7 +139,7 @@ namespace LoveLive_Mahjong_Library
                     i += finch.Count() - 1;
 
                     // 判断和牌
-                    if (_IsHu(hu_cards))
+                    if (isHu(hu_cards, ref huCard))
                     {
                         // 将副露区的牌加入和牌牌组
                         foreach (MahjongCardFuru furu in Furu_Cards)
@@ -189,7 +183,7 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         /// <param name="cards">手牌</param>
         /// <returns>是否可和</returns>
-        private bool _IsHu(List<MahjongCard> cards) => _IsHu(cards, 0);
+        private bool isHu(List<MahjongCard> cards, ref List<HuCard> huCard) => isHu(cards, 0, ref huCard);
 
         /// <summary>
         ///  和牌判定（除去雀头和副露）
@@ -197,7 +191,7 @@ namespace LoveLive_Mahjong_Library
         /// <param name="cards">手牌</param>
         /// <param name="start">从第几张手牌开始找刻子</param>
         /// <returns>是否和牌</returns>
-        private bool _IsHu(List<MahjongCard> cards, int start)
+        private bool isHu(List<MahjongCard> cards, int start, ref List<HuCard> huCard)
         {
             if (cards.Count == 0)
             {
@@ -231,13 +225,13 @@ namespace LoveLive_Mahjong_Library
                 }
 
                 // 递归判和
-                return _IsHu(cards);
+                return isHu(cards, ref huCard);
             }
             else
             {
                 if (start + 1 < cards.Count)
                 {
-                    return _IsHu(cards, start + 1);
+                    return isHu(cards, start + 1, ref huCard);
                 }
                 else
                 {
@@ -310,7 +304,7 @@ namespace LoveLive_Mahjong_Library
                                 }
 
                                 // 递归判和
-                                return _IsHu(cards);
+                                return isHu(cards, ref huCard);
                             }
                         }
                     }
@@ -326,7 +320,7 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         /// <param name="Status">是否考虑状况役（当听牌判役时不考虑）</param>
         /// <param name="TankiOrW13">是否处于单骑听牌或13面听牌状态</param>
-        private List<MahjongYaku> _Yaku(bool Status, bool TankiOrW13)
+        private List<MahjongYaku> calcYaku(List<HuCard> huCard, bool Status, bool TankiOrW13)
         {
             // 为避免役型冲突设立的状态布尔
             bool isFuru = false; // 副露
@@ -775,7 +769,7 @@ namespace LoveLive_Mahjong_Library
             // 检查状态役
             if (Status)
             {
-                yakus.AddRange(_StatusYaku(isYakuman));
+                yakus.AddRange(calcStatusYaku(isYakuman));
             }
 
             return yakus;
@@ -786,7 +780,7 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         /// <param name="Yakuman">是否有役满</param>
         /// <returns>状态役表</returns>
-        private List<MahjongYaku> _StatusYaku(bool Yakuman)
+        private List<MahjongYaku> calcStatusYaku(bool Yakuman)
         {
             // 状况役：与手牌无关，与场上状况有关的役 
             // 行为役：立直 門前清自摸和 ダブル立直
@@ -810,7 +804,7 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         /// <param name="chitoi">七对子</param>
         /// <returns>符数</returns>
-        private int _Fu(bool chitoi)
+        private int calcFu(List<HuCard> huCard, bool chitoi)
         {
             int fu = chitoi ? 25 : 20;
             int fu_add;
@@ -861,7 +855,7 @@ namespace LoveLive_Mahjong_Library
         /// <param name="yakus">役种</param>
         /// <param name="furu">副露状态</param>
         /// <returns></returns>
-        private int _Ban(List<MahjongYaku> yakus, bool furu)
+        private int calcBan(List<MahjongYaku> yakus, bool furu)
         {
             int ban = 0;
             foreach (MahjongYaku yaku in yakus)
@@ -889,7 +883,7 @@ namespace LoveLive_Mahjong_Library
         /// <param name="yakus">役种</param>
         /// <param name="furu">副露状态</param>
         /// <returns></returns>
-        private int _HuPoints(bool order, bool tsumo, bool tsumo_order, List<MahjongYaku> yakus, bool furu)
+        private int calcHuPoints(bool order, bool tsumo, bool tsumo_order, List<MahjongYaku> yakus, bool furu, List<HuCard> huCards)
         {
             // 点数公式 100 * 向上取整(a*b*2^(c+2)/100)
             // a: 庄闲系数 b:符数 c: 番数
@@ -926,14 +920,14 @@ namespace LoveLive_Mahjong_Library
             }
 
             // 先算番数
-            c = _Ban(yakus, furu);
+            c = calcBan(yakus, furu);
 
             if (c < 5)
             {
                 // 5番（满贯）以下
 
                 IEnumerable<MahjongYaku> chitoi = from yaku in yakus where yaku.type == MahjongYakuType.Chitoi select yaku;
-                b = _Fu(chitoi.Count() > 0);
+                b = calcFu(huCards, chitoi.Count() > 0);
 
                 double e = a * b * Math.Pow(2, c + 2) / 100.0;
 
@@ -963,11 +957,11 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 能够鸣牌计算
         /// </summary>
-        private void _CanFuru()
+        private List<FuruAble> isCanFuru()
         {
             // 获得刚刚打牌的玩家的牌河和打出的牌
             List<MahjongCard> played_cards = GetPlayerCardPlayed(Playing);
-            MahjongCard last_played = played_cards[~1]; // 最后一张
+            MahjongCard last_played = played_cards.Last(); // 最后一张
 
             // 比对其他三家的手牌
             List<FuruAble> furuAbles = new List<FuruAble>();
@@ -975,6 +969,7 @@ namespace LoveLive_Mahjong_Library
             // 记录是否有玩家可以碰或者杠以减少不必要的计算
             bool hasPongKong = false;
 
+            // 遍历所有其它玩家
             for (int player = 0; player < 4; player++)
             {
                 if (player == Playing)
@@ -992,7 +987,7 @@ namespace LoveLive_Mahjong_Library
                 if (hasPongKong == false)
                 {
                     // 优先找出杠子和刻子
-                    IEnumerable<MahjongCard> PongKong = from card in played_cards where card == last_played select card;
+                    IEnumerable<MahjongCard> PongKong = from card in player_hand where card == last_played select card;
                     switch (PongKong.Count())
                     {
                         case 3:
@@ -1021,8 +1016,100 @@ namespace LoveLive_Mahjong_Library
                 }
 
                 // 年级和小组顺子（吃）
-                
+                // 年级顺子
+                MahjongCardName name = last_played.name;
+                MahjongCardGradeType grade = last_played.grade;
+                IEnumerable<IGrouping<MahjongCardName, MahjongCard>> grade_chi = from card in player_hand
+                                                                                 where (card.grade == grade) && (card.name != name)
+                                                                                 group card by card.name into g
+                                                                                 select g;
+                if (grade_chi.Count() == 2)
+                {
+                    // 至少要有两种同年级的牌才可以吃
+                    // 获得要吃的牌
+                    List<MahjongCard> chi = new List<MahjongCard>();
+                    foreach (IGrouping<MahjongCardName, MahjongCard> cards in grade_chi)
+                    {
+                        chi.Add(cards.First());
+                    }
+
+                    // 加入可副露列表
+                    furuAble.FuruableList.Add(new MahjongCardFuru()
+                    {
+                        cards = chi,
+                        target = Playing,
+                        type = FuruType.ChiGrade,
+                    });
+                }
+
+                // 小组顺子
+                MahjongCardSquadType squad = last_played.squad;
+                IEnumerable<IGrouping<MahjongCardName, MahjongCard>> squad_chi = from card in player_hand
+                                                                                 where (card.squad == squad) && (card.name != name)
+                                                                                 group card by card.name into g
+                                                                                 select g;
+                if (squad_chi.Count() == 2)
+                {
+                    // 至少要有两种同小组的牌才可以吃
+                    // 获得要吃的牌
+                    List<MahjongCard> chi = new List<MahjongCard>();
+                    foreach (IGrouping<MahjongCardName, MahjongCard> cards in squad_chi)
+                    {
+                        chi.Add(cards.First());
+                    }
+
+                    // 加入可副露列表
+                    furuAble.FuruableList.Add(new MahjongCardFuru()
+                    {
+                        cards = chi,
+                        target = Playing,
+                        type = FuruType.ChiSquad,
+                    });
+                }
+
+                furuAbles.Add(furuAble);
             }
+
+            return furuAbles;
+        }
+
+        /// <summary>
+        /// 能够荣和计算（根据当前所有玩家的听牌）
+        /// </summary>
+        private List<RonAble> isCanRon()
+        {
+            // 获得刚刚打牌的玩家的牌河和打出的牌
+            List<MahjongCard> played_cards = GetPlayerCardPlayed(Playing);
+            MahjongCard last_played = played_cards.Last(); // 最后一张
+
+            // 比对其他三家的手牌
+            List<RonAble> ronAbles = new List<RonAble>();
+
+            // 遍历所有其它玩家
+            for (int player = 0; player < 4; player++)
+            {
+                if (player == Playing)
+                {
+                    continue; // 跳过自己
+                }
+
+                // 获得玩家信息
+                PlayerInfo info = player_info[player];
+
+                // 先查询振听状态，如果振听则不能荣和
+                if(info.waiting_tsumo == WaitingTsumo.None)
+                {
+                    // 查询是否是被听的牌
+                    IEnumerable<MahjongCard> huCard = from card in info.waiting where card == last_played select card;
+
+                    if (huCard.Count() > 0)
+                    {
+                        ronAbles.Add(new RonAble(player, last_played));
+                    }
+                }
+            }
+
+            return ronAbles;
         }
     }
 }

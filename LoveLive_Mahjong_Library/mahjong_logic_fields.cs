@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if DEBUG
+#define UNITTEST
+#endif
+
+using System;
 using System.Collections.Generic;
 
 namespace LoveLive_Mahjong_Library
@@ -15,7 +19,11 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         private readonly List<MahjongCard> card_stacks = new List<MahjongCard>();
 
+#if UNITTEST
+        public PlayerInfo[] player_info = new PlayerInfo[4];
+#else
         private readonly PlayerInfo[] player_info = new PlayerInfo[4];
+#endif
 
         /// <summary>
         /// 游戏场次
@@ -45,12 +53,12 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 玩家出牌顺序，第一位是庄家
         /// </summary>
-        private readonly int[] order;
+        private int[] order;
 
         /// <summary>
         /// 正在考虑出牌的玩家，0是庄家
         /// </summary>
-        private readonly int playing;
+        private int playing;
 
         /// <summary>
         /// 牌的总数（来自数据库）

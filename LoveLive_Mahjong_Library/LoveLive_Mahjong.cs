@@ -256,6 +256,8 @@ namespace LoveLive_Mahjong_Library
                 YakuInfo.Add(mahjongYaku);
             }
         }
+
+        public static MahjongCard GetCard(MahjongCardName cardName) => (from c in CardInfo where c.name == cardName select c).First();
     }
 
     /// <summary>
@@ -615,17 +617,17 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 牌河
         /// </summary>
-        public readonly List<MahjongCard> card_played = new List<MahjongCard>();
+        public List<MahjongCard> card_played = new List<MahjongCard>();
 
         /// <summary>
         /// 手牌
         /// </summary>
-        public readonly List<MahjongCard> card_onhand = new List<MahjongCard>();
+        public List<MahjongCard> card_onhand = new List<MahjongCard>();
 
         /// <summary>
         /// 副露
         /// </summary>
-        public readonly List<MahjongCardFuru> card_furu = new List<MahjongCardFuru>();
+        public List<MahjongCardFuru> card_furu = new List<MahjongCardFuru>();
 
         /// <summary>
         /// 清除该玩家所有的牌，并清除相应状态
@@ -689,6 +691,11 @@ namespace LoveLive_Mahjong_Library
         }
 
         /// <summary>
+        /// 听牌
+        /// </summary>
+        public List<MahjongCard> waiting = new List<MahjongCard>();
+
+        /// <summary>
         /// 振听
         /// </summary>
         public WaitingTsumo waiting_tsumo = WaitingTsumo.None;
@@ -736,6 +743,31 @@ namespace LoveLive_Mahjong_Library
         {
             this.playerId = playerId;
             FuruableList = new List<MahjongCardFuru>();
+        }
+    }
+
+    /// <summary>
+    /// 可荣和状态
+    /// </summary>
+    public class RonAble
+    {
+        /// <summary>
+        /// 可以荣和的牌
+        /// </summary>
+        public MahjongCard RonCard;
+
+        /// <summary>
+        /// 对应的玩家
+        /// </summary>
+        private readonly int playerId;
+
+        /// <summary>
+        /// 创建一个可荣牌组
+        /// </summary>
+        public RonAble(int playerId, MahjongCard RonCard)
+        {
+            this.playerId = playerId;
+            this.RonCard = RonCard;
         }
     }
 }
