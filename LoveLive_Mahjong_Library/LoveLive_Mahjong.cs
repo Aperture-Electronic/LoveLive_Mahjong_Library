@@ -734,7 +734,7 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 对应的玩家
         /// </summary>
-        private readonly int playerId;
+        public readonly int playerId;
 
         /// <summary>
         /// 创建一个可副露牌组
@@ -759,7 +759,7 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 对应的玩家
         /// </summary>
-        private readonly int playerId;
+        public readonly int playerId;
 
         /// <summary>
         /// 创建一个可荣牌组
