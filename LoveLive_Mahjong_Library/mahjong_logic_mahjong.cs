@@ -30,8 +30,10 @@ namespace LoveLive_Mahjong_Library
 
             for (int i = 0; i < LoveLive_MahjongClass.CardInfo.Count; i++)
             {
-                List<MahjongCard> new_hand_cards = new List<MahjongCard>(Hand_Cards);
-                new_hand_cards.Add(LoveLive_MahjongClass.CardInfo[i]);
+                List<MahjongCard> new_hand_cards = new List<MahjongCard>(Hand_Cards)
+                {
+                    LoveLive_MahjongClass.CardInfo[i]
+                };
                 bool Hu = _IsHu(new_hand_cards, Furu_Cards);
                 if (Hu)
                 {
@@ -963,7 +965,64 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         private void _CanFuru()
         {
+            // 获得刚刚打牌的玩家的牌河和打出的牌
+            List<MahjongCard> played_cards = GetPlayerCardPlayed(Playing);
+            MahjongCard last_played = played_cards[~1]; // 最后一张
 
+            // 比对其他三家的手牌
+            List<FuruAble> furuAbles = new List<FuruAble>();
+
+            // 记录是否有玩家可以碰或者杠以减少不必要的计算
+            bool hasPongKong = false;
+
+            for (int player = 0; player < 4; player++)
+            {
+                if (player == Playing)
+                {
+                    continue; // 跳过自己
+                }
+
+                // 获得手牌
+                List<MahjongCard> player_hand = GetPlayerCardOnHand(player);
+
+                // 记录可副露牌组
+                FuruAble furuAble = new FuruAble(player);
+
+                // 如果已经有别的玩家可以碰杠，则不可能再有玩家可以碰杠
+                if (hasPongKong == false)
+                {
+                    // 优先找出杠子和刻子
+                    IEnumerable<MahjongCard> PongKong = from card in played_cards where card == last_played select card;
+                    switch (PongKong.Count())
+                    {
+                        case 3:
+                            // 可以杠
+                            furuAble.FuruableList.Add(new MahjongCardFuru()
+                            {
+                                cards = Enumerable.Repeat(last_played, 4).ToList(),
+                                target = Playing,
+                                type = FuruType.Kong,
+                            });
+                            hasPongKong = true;
+                            break;
+                        case 2:
+                            // 可以碰
+                            furuAble.FuruableList.Add(new MahjongCardFuru()
+                            {
+                                cards = Enumerable.Repeat(last_played, 3).ToList(),
+                                target = Playing,
+                                type = FuruType.Pong,
+                            });
+                            hasPongKong = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // 年级和小组顺子（吃）
+                
+            }
         }
     }
 }

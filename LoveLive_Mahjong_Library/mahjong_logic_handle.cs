@@ -60,19 +60,25 @@ namespace LoveLive_Mahjong_Library
         public int[] PlayerOrder => order;
 
         /// <summary>
+        /// 获得玩家信息
+        /// </summary>
+        /// <param name="player">玩家编号（按照外部玩家编号）</param>
+        /// <returns></returns>
+        public PlayerInfo GetPlayerInfo(int player) => player_info[player];
+
+        /// <summary>
         /// 获得玩家手牌
         /// </summary>
         /// <param name="player">玩家编号（按照外部玩家编号）</param>
         /// <returns></returns>
-        public List<MahjongCard> GetPlayerCardOnHand(int player)
-        {
-            return player_info[player].card_onhand;
-        }
+        public List<MahjongCard> GetPlayerCardOnHand(int player) => player_info[player].card_onhand;
 
-        private List<MahjongCard> GetPlayerCardPlayed(int player)
-        {
-            return player_info[player].card_played;
-        }
+        /// <summary>
+        /// 获得玩家牌河
+        /// </summary>
+        /// <param name="player">玩家编号（按照外部玩家编号）</param>
+        /// <returns></returns>
+        private List<MahjongCard> GetPlayerCardPlayed(int player) => player_info[player].card_played;
 
         /// <summary>
         /// 打牌
@@ -95,11 +101,8 @@ namespace LoveLive_Mahjong_Library
                     return false;
                 }
 
-                // 将牌从手牌打到牌河
-                GetPlayerCardPlayed(player).Add(card_to_play.First());
-
-                // 从手牌中删除这张牌
-                player_onhand.Remove(card_to_play.First());
+                // 玩家打出牌
+                GetPlayerInfo(player).PlayCard(card_to_play.First());
 
                 // 向游戏线程发送完成请求
                 gameStatusMachine.SetStatus(GameStatusMachine.Status.SendPlayerOperate);

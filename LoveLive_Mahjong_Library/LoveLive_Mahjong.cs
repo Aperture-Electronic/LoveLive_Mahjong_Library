@@ -146,10 +146,7 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 为当前牌添加宝牌等级（只影响当前实例）
         /// </summary>
-        public void AddTreasure()
-        {
-            treasure++;
-        }
+        public void AddTreasure() => treasure++;
 
         // 只有角色牌有效的属性
         /// <summary>
@@ -168,35 +165,31 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         public MahjongCardGroupType group;
 
-        public override string ToString()
-        {
-            return c_name;
-        }
+        /// <summary>
+        /// 返回一个能代表此张牌的名称
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => c_name;
 
-        public bool Equals(MahjongCard other)
-        {
-            return (name == other.name);
-        }
+        /// <summary>
+        /// 比对两张牌
+        /// </summary>
+        /// <param name="other">另一张牌</param>
+        /// <returns></returns>
+        public bool Equals(MahjongCard other) => name == other.name;
 
-        public override bool Equals(object obj)
-        {
-            return Equals((MahjongCard)obj);
-        }
+        /// <summary>
+        /// 比对两张牌
+        /// </summary>
+        /// <param name="obj">另一张牌</param>
+        /// <returns></returns>
+        public override bool Equals(object obj) => Equals((MahjongCard)obj);
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
-        public static bool operator ==(MahjongCard left, MahjongCard right)
-        {
-            return left.name == right.name;
-        }
+        public static bool operator ==(MahjongCard left, MahjongCard right) => left.name == right.name;
 
-        public static bool operator !=(MahjongCard left, MahjongCard right)
-        {
-            return left.name != right.name;
-        }
+        public static bool operator !=(MahjongCard left, MahjongCard right) => left.name != right.name;
     }
 
     public static class LoveLive_MahjongClass
@@ -587,11 +580,8 @@ namespace LoveLive_Mahjong_Library
         /// </summary>
         public List<MahjongCard> cards;
 
-        public override string ToString()
-        {
-            return $"牌组类型：{Enum.GetName(typeof(HuCardType), type)}，副露 = {furu}," +
+        public override string ToString() => $"牌组类型：{Enum.GetName(typeof(HuCardType), type)}，副露 = {furu}," +
                 $" 牌组={string.Join(",", cards.Select(card => card.ToString()).ToArray())}";
-        }
     }
 
     /// <summary>
@@ -655,9 +645,19 @@ namespace LoveLive_Mahjong_Library
         /// 向手牌中加入一张牌
         /// </summary>
         /// <param name="card">要加入的牌</param>
-        public void AddHandCard(MahjongCard card)
+        public void AddHandCard(MahjongCard card) => card_onhand.Add(card);
+
+        /// <summary>
+        /// 向牌河中打一张牌
+        /// </summary>
+        /// <param name="card">要打的牌</param>
+        public void PlayCard(MahjongCard card)
         {
-            card_onhand.Add(card);
+            // 将牌从手牌打到牌河
+            card_played.Add(card);
+
+            // 从手牌中删除这张牌
+            card_onhand.Remove(card);
         }
 
         /// <summary>
@@ -712,5 +712,30 @@ namespace LoveLive_Mahjong_Library
         /// 点数
         /// </summary>
         public int points = 0;
+    }
+
+    /// <summary>
+    /// 可副露状态
+    /// </summary>
+    public class FuruAble
+    {
+        /// <summary>
+        /// 可以副露的牌组和种类
+        /// </summary>
+        public List<MahjongCardFuru> FuruableList;
+
+        /// <summary>
+        /// 对应的玩家
+        /// </summary>
+        private readonly int playerId;
+
+        /// <summary>
+        /// 创建一个可副露牌组
+        /// </summary>
+        public FuruAble(int playerId)
+        {
+            this.playerId = playerId;
+            FuruableList = new List<MahjongCardFuru>();
+        }
     }
 }

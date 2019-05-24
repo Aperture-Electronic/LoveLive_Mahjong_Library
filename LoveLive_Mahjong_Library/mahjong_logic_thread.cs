@@ -40,7 +40,7 @@ namespace LoveLive_Mahjong_Library
                 switch(gameStatusMachine.status)
                 {
                     case GameStatusMachine.Status.Idle:
-
+                    
                         break;
                     case GameStatusMachine.Status.WaitPlayerOperation:
                         
