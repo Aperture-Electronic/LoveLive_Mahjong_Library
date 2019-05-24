@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LoveLive_Mahjong_Library
@@ -111,6 +112,28 @@ namespace LoveLive_Mahjong_Library
             }
 
             return false;
+        }
+
+
+        /// <summary>
+        /// 玩家动作响应回调函数
+        /// </summary>
+        public Action<List<PlayerAction>> PlayerActionResponseCallback;
+
+        /// <summary>
+        /// 玩家动作请求接受回调函数
+        /// </summary>
+        public Action<int, bool> PlayerActionAcceptedCallback;
+
+        /// <summary>
+        /// 向当前等待队列发送玩家动作请求
+        /// </summary>
+        /// <param name="action"></param>
+        public void SendPlayerAction(PlayerAction action)
+        {
+            // 状态机必须要在等待状态才可以接受请求
+            // 多线程同步由状态机管理
+            gameStatusMachine.SendPlayerAction(action);
         }
     }
 }

@@ -9,6 +9,9 @@ namespace LoveLive_Mahjong_Library
         private Thread gamingThread;
         public GameStatusMachine gameStatusMachine;
 
+        // 当前可供进行的玩家操作
+        private IEnumerable<IGrouping<int, PlayerAction>> PlayerActionsList;
+
         /// <summary>
         /// 打开游戏进度主线程
         /// </summary>
@@ -48,16 +51,19 @@ namespace LoveLive_Mahjong_Library
                         
                         break;
                     case GameStatusMachine.Status.SendPlayerOperate:
-                        // 获得用户响应，将向其他用户广播其响应
+                        // 创建响应
+                        List<PlayerAction> playerActions = new List<PlayerAction>();
+
                         // 判定荣和
                         List<RonAble> RonAbles = isCanRon();
+                        if (RonAbles.Count() > 0)
                         {
                             // 发出可以荣和的消息到玩家
                             // 先根据玩家编号分类
                             IEnumerable<RonAble> player_ronable = from ronable in RonAbles group ronable by ronable.playerId into g select g.First();
-                            foreach (RonAble player in player_ronable)
+                            foreach (RonAble ronable in player_ronable)
                             {
-
+                                playerActions.Add(new PlayerAction(ronable));
                             }
                         }
 
@@ -68,14 +74,47 @@ namespace LoveLive_Mahjong_Library
                             // 发出可以鸣牌的消息到玩家
                             // 先根据玩家编号分类
                             IEnumerable<FuruAble> player_furuable = from furuable in Furuables group furuable by furuable.playerId into g select g.First();
-                            foreach (FuruAble player in player_furuable)
+                            foreach (FuruAble furuable in player_furuable)
                             {
-                                
+                                foreach (MahjongCardFuru furu in furuable.FuruableList)
+                                {
+                                    playerActions.Add(new PlayerAction(furu, furuable.playerId));
+                                }
                             }
                         }
-                        else
+
+                        if ((RonAbles.Count > 0) || (Furuables.Count > 0))
                         {
-                            // 没有可以鸣牌的操作，继续
+                            // 保存可能的玩家操作列表
+                            PlayerActionsList = from act in playerActions group act by act.playerId into g select g;
+
+                            // 获得用户响应，将向其他用户广播其响应
+                            // 使用响应回调函数
+                            PlayerActionResponseCallback(playerActions);
+                        }
+                        break;
+                    case GameStatusMachine.Status.AcceptingPlayerOperation:
+                        // 取出队列
+                        PlayerAction action = gameStatusMachine.GetPlayerAction();
+
+                        // 按照优先级处理
+                        // 1. 自摸
+                        // 2. 荣和
+                        if (action.actionType == PlayerActionType.Ron)
+                        {
+                            // 查询是否有别的同或更高优先级动作
+                            // 选择其他玩家
+                            IEnumerable<IGrouping<int, PlayerAction>> expected = from act in PlayerActionsList
+                                                                                 where act.Key != action.playerId
+                                                                                 select act;
+
+                            foreach (IGrouping<int, PlayerAction> player_acts in expected)
+                            {
+                                IEnumerable<PlayerAction> highPriorityActives = from act in player_acts
+                                                                                where act.Priority <= action.Priority
+                                                                                select act;
+
+                            }
                         }
 
                         break;

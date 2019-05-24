@@ -988,9 +988,20 @@ namespace LoveLive_Mahjong_Library
                 {
                     // 优先找出杠子和刻子
                     IEnumerable<MahjongCard> PongKong = from card in player_hand where card == last_played select card;
-                    switch (PongKong.Count())
+                    if (PongKong.Count() >= 2)
                     {
-                        case 3:
+                        hasPongKong = true;
+
+                        // 可以碰
+                        furuAble.FuruableList.Add(new MahjongCardFuru()
+                        {
+                            cards = Enumerable.Repeat(last_played, 3).ToList(),
+                            target = Playing,
+                            type = FuruType.Pong,
+                        });
+
+                        if (PongKong.Count() == 3)
+                        {
                             // 可以杠
                             furuAble.FuruableList.Add(new MahjongCardFuru()
                             {
@@ -1000,18 +1011,7 @@ namespace LoveLive_Mahjong_Library
                             });
                             hasPongKong = true;
                             break;
-                        case 2:
-                            // 可以碰
-                            furuAble.FuruableList.Add(new MahjongCardFuru()
-                            {
-                                cards = Enumerable.Repeat(last_played, 3).ToList(),
-                                target = Playing,
-                                type = FuruType.Pong,
-                            });
-                            hasPongKong = true;
-                            break;
-                        default:
-                            break;
+                        }
                     }
                 }
 
@@ -1097,7 +1097,7 @@ namespace LoveLive_Mahjong_Library
                 PlayerInfo info = player_info[player];
 
                 // 先查询振听状态，如果振听则不能荣和
-                if(info.waiting_tsumo == WaitingTsumo.None)
+                if (info.waiting_tsumo == WaitingTsumo.None)
                 {
                     // 查询是否是被听的牌
                     IEnumerable<MahjongCard> huCard = from card in info.waiting where card == last_played select card;

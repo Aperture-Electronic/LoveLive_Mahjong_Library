@@ -27,6 +27,11 @@ namespace LoveLive_Mahjong_Library
                 WaitPlayerOperation,
 
                 /// <summary>
+                /// 接受玩家操作
+                /// </summary>
+                AcceptingPlayerOperation,
+
+                /// <summary>
                 /// 退出
                 /// </summary>
                 Exit,
@@ -37,6 +42,13 @@ namespace LoveLive_Mahjong_Library
             /// </summary>
             public Status status { get; private set; }
             private Semaphore semaphore;
+            private Queue<PlayerAction> queueActions;
+
+            /// <summary>
+            /// 从消息队列中取出一个玩家操作
+            /// </summary>
+            /// <returns></returns>
+            public PlayerAction GetPlayerAction() => queueActions.Dequeue();
             
             /// <summary>
             /// （线程内使用）阻塞线程，等待状态的改变（always@）
@@ -50,7 +62,10 @@ namespace LoveLive_Mahjong_Library
             public GameStatusMachine()
             {
                 // 创建信号量
-                semaphore = new Semaphore(0, 1);
+                semaphore = new Semaphore(0, 4);
+
+                // 创建消息队列
+                queueActions = new Queue<PlayerAction>();
 
                 // 重置状态
                 status = Status.Idle;
@@ -64,6 +79,18 @@ namespace LoveLive_Mahjong_Library
             {
                 if (status == Status.Exit) throw new Exception($"不可以直接中断线程, 请调用{nameof(DirectlyExit)}()函数。");
                 this.status = status;
+                semaphore.Release();
+            }
+
+            public void SendPlayerAction(PlayerAction action)
+            {
+                // 信号入队
+                queueActions.Enqueue(action);
+
+                // 处理状态
+                status = Status.AcceptingPlayerOperation;
+
+                // 释放信号量
                 semaphore.Release();
             }
 

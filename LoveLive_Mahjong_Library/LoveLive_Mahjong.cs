@@ -770,4 +770,139 @@ namespace LoveLive_Mahjong_Library
             this.RonCard = RonCard;
         }
     }
+
+    /// <summary>
+    /// 玩家可执行动作类型
+    /// </summary>
+    public enum PlayerActionType
+    {
+        /// <summary>
+        /// 荣和
+        /// </summary>
+        Ron,
+        /// <summary>
+        /// 吃（年级）
+        /// </summary>
+        ChiGrade,
+        /// <summary>
+        /// 吃（小组）
+        /// </summary>
+        ChiSquad,
+        /// <summary>
+        /// 碰
+        /// </summary>
+        Pong,
+        /// <summary>
+        /// 大明杠
+        /// </summary>
+        Kong,
+        /// <summary>
+        /// 暗杠
+        /// </summary>
+        Kong_Self,
+        /// <summary>
+        /// 加杠（小明杠）
+        /// </summary>
+        Kong_Add,
+        /// <summary>
+        /// 自摸
+        /// </summary>
+        Tsumo,
+        /// <summary>
+        /// 取消
+        /// </summary>
+        Cancel
+    }
+
+    /// <summary>
+    /// 玩家可执行动作
+    /// </summary>
+    public class PlayerAction
+    {
+        /// <summary>
+        /// 玩家编号
+        /// </summary>
+        public int playerId;
+
+        public PlayerAction(int playerId) => this.playerId = playerId;
+
+        /// <summary>
+        /// 此操作所影响的牌（如要吃碰杠的牌，要荣和自摸的牌）
+        /// </summary>
+        public List<MahjongCard> effectCards;
+
+        /// <summary>
+        /// 此操作的类型
+        /// </summary>
+        public PlayerActionType actionType;
+
+        public PlayerAction(RonAble ronable)
+        {
+            playerId = ronable.playerId;
+            actionType = PlayerActionType.Ron;
+            effectCards = new List<MahjongCard>() { ronable.RonCard };
+        }
+
+        public PlayerAction(MahjongCardFuru furuable, int playerId)
+        {
+            this.playerId = playerId;
+            switch (furuable.type)
+            {
+                case FuruType.ChiGrade:
+                    actionType = PlayerActionType.ChiGrade;
+                    break;
+                case FuruType.ChiSquad:
+                    actionType = PlayerActionType.ChiSquad;
+                    break;
+                case FuruType.Pong:
+                    actionType = PlayerActionType.Pong;
+                    break;
+                case FuruType.Kong:
+                    actionType = PlayerActionType.Kong;
+                    break;
+                case FuruType.Kong_Self:
+                    actionType = PlayerActionType.Kong_Self;
+                    break;
+                case FuruType.Kong_Add:
+                    actionType = PlayerActionType.Kong_Add;
+                    break;
+            }
+
+            effectCards = furuable.cards;
+        }
+
+        /// <summary>
+        /// 返回本操作的优先级
+        /// </summary>
+        /// <returns></returns>
+        public int Priority
+        {
+            get
+            {
+                switch (actionType)
+                {
+                    case PlayerActionType.Tsumo:
+                        return 0;
+                    case PlayerActionType.Ron:
+                        return 1;
+                    case PlayerActionType.Kong:
+                        return 2;
+                    case PlayerActionType.Kong_Self:
+                        return 2;
+                    case PlayerActionType.Kong_Add:
+                        return 2;
+                    case PlayerActionType.Pong:
+                        return 2;
+                    case PlayerActionType.ChiGrade:
+                        return 3;
+                    case PlayerActionType.ChiSquad:
+                        return 3;
+                    case PlayerActionType.Cancel:
+                        return 4;
+                    default:
+                        return 4;
+                }
+            }
+        }
+    }
 }
