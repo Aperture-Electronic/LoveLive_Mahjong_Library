@@ -9,7 +9,7 @@ namespace LoveLive_Mahjong_Library
     {
         private bool gameStarted = false;
 
-        public class GameStatusMachine
+        public class GameStateMachine
         {
             public enum Status
             {
@@ -59,7 +59,7 @@ namespace LoveLive_Mahjong_Library
             /// <summary>
             /// 创建游戏状态机
             /// </summary>
-            public GameStatusMachine()
+            public GameStateMachine()
             {
                 // 创建信号量
                 semaphore = new Semaphore(0, 4);
@@ -83,25 +83,64 @@ namespace LoveLive_Mahjong_Library
             }
 
             /// <summary>
+            /// 玩家动作通道状态
+            /// </summary>
+            private bool playerActionChannelStatus = false;
+
+            /// <summary>
             /// 发送玩家动作
             /// </summary>
             /// <param name="action"></param>
             public void SendPlayerAction(PlayerAction action)
             {
-                // 信号入队
-                queueActions.Enqueue(action);
+                // 若未打开通道，直接忽略消息
+                if (playerActionChannelStatus)
+                {
+                    // 信号入队
+                    queueActions.Enqueue(action);
 
-                // 处理状态
-                status = Status.AcceptingPlayerOperation;
+                    // 处理状态
+                    status = Status.AcceptingPlayerOperation;
 
-                // 释放信号量
-                semaphore.Release();
+                    // 释放信号量
+                    semaphore.Release();
+                }
             }
 
             /// <summary>
             /// 清空玩家动作消息队列
             /// </summary>
             public void ClearAction() => queueActions.Clear();
+
+            /// <summary>
+            /// 打开玩家动作通道
+            /// </summary>
+            public void OpenPlayerActionChannel()
+            {
+                // 清空动作消息队列
+                ClearAction();
+
+                // 重置信号量
+                semaphore = new Semaphore(0, 4);
+
+                // 打开通道
+                playerActionChannelStatus = true;
+            }
+
+            /// <summary>
+            /// 关闭玩家动作通道
+            /// </summary>
+            public void ClosePlayerActionChannel()
+            {
+                // 关闭通道
+                playerActionChannelStatus = false;
+
+                // 清空动作消息队列
+                ClearAction();
+
+                // 重置信号量
+                semaphore = new Semaphore(0, 4);
+            }
 
             /// <summary>
             /// 传递一个退出状态到线程，令线程退出

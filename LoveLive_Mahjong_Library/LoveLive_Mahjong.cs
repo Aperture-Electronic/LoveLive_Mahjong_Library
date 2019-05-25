@@ -896,11 +896,11 @@ namespace LoveLive_Mahjong_Library
                     case PlayerActionType.ChiGrade:
                         return 3;
                     case PlayerActionType.ChiSquad:
-                        return 3;
+                        return 4;
                     case PlayerActionType.Cancel:
-                        return 4;
+                        return 5;
                     default:
-                        return 4;
+                        return 5;
                 }
             }
         }

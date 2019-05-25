@@ -106,7 +106,7 @@ namespace LoveLive_Mahjong_Library
                 GetPlayerInfo(player).PlayCard(card_to_play.First());
 
                 // 向游戏线程发送完成请求
-                gameStatusMachine.SetStatus(GameStatusMachine.Status.SendPlayerOperate);
+                gameStateMachine.SetStatus(GameStateMachine.Status.SendPlayerOperate);
 
                 return true;
             }
@@ -133,7 +133,7 @@ namespace LoveLive_Mahjong_Library
         {
             // 状态机必须要在等待状态才可以接受请求
             // 多线程同步由状态机管理
-            gameStatusMachine.SendPlayerAction(action);
+            gameStateMachine.SendPlayerAction(action);
         }
     }
 }

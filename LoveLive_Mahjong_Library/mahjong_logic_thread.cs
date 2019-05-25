@@ -7,7 +7,7 @@ namespace LoveLive_Mahjong_Library
     public partial class MahjongLogic
     {
         private Thread gamingThread;
-        public GameStatusMachine gameStatusMachine;
+        public GameStateMachine gameStateMachine;
 
         /// <summary>
         /// 当前可供进行的玩家操作
@@ -35,7 +35,7 @@ namespace LoveLive_Mahjong_Library
             gamingThread.Start();
 
             // 创建进程控制状态机
-            gameStatusMachine = new GameStatusMachine();
+            gameStateMachine = new GameStateMachine();
         }
 
         private void GamingThread()
@@ -47,17 +47,17 @@ namespace LoveLive_Mahjong_Library
             for (; ; )
             {
                 // 等待信号量
-                gameStatusMachine.WaitSemaphore();
+                gameStateMachine.WaitSemaphore();
 
-                switch (gameStatusMachine.status)
+                switch (gameStateMachine.status)
                 {
-                    case GameStatusMachine.Status.Idle:
+                    case GameStateMachine.Status.Idle:
 
                         break;
-                    case GameStatusMachine.Status.WaitPlayerOperation:
+                    case GameStateMachine.Status.WaitPlayerOperation:
 
                         break;
-                    case GameStatusMachine.Status.SendPlayerOperate:
+                    case GameStateMachine.Status.SendPlayerOperate:
                         // 创建响应
                         List<PlayerAction> playerActions = new List<PlayerAction>();
 
@@ -93,8 +93,8 @@ namespace LoveLive_Mahjong_Library
                         // 清空动作预备列表
                         PrepareActionsList.Clear();
 
-                        // 清空动作消息队列
-                        gameStatusMachine.ClearAction();
+                        // 打开玩家动作通道
+                        gameStateMachine.OpenPlayerActionChannel();
 
                         if ((RonAbles.Count > 0) || (Furuables.Count > 0))
                         {
@@ -107,9 +107,9 @@ namespace LoveLive_Mahjong_Library
                         }
 
                         break;
-                    case GameStatusMachine.Status.AcceptingPlayerOperation:
+                    case GameStateMachine.Status.AcceptingPlayerOperation:
                         // 取出队列
-                        PlayerAction action = gameStatusMachine.GetPlayerAction();
+                        PlayerAction action = gameStateMachine.GetPlayerAction();
 
                         // 按照优先级处理
 
@@ -158,7 +158,7 @@ namespace LoveLive_Mahjong_Library
                         }
 
                         break;
-                    case GameStatusMachine.Status.Exit:
+                    case GameStateMachine.Status.Exit:
                         return;
                 }
             }

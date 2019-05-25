@@ -102,7 +102,7 @@ namespace UnitTestMahjong
 
             mahjongLogic.StartGamingThread();
 
-            mahjongLogic.gameStatusMachine.DirectlyExit();
+            mahjongLogic.gameStateMachine.DirectlyExit();
         }
 
         [TestMethod]
