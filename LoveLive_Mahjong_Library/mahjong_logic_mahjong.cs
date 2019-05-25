@@ -60,7 +60,7 @@ namespace LoveLive_Mahjong_Library
             huCard = new List<HuCard>();
 
             // 判断数量
-            if (hand_cards.Count + furu_cards.Count * 3 < 14)
+            if (hand_cards.Count + (furu_cards.Count * 3) < 14)
             {
                 return false;
             }

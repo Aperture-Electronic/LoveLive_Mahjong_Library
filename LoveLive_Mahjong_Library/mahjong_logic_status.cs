@@ -82,6 +82,10 @@ namespace LoveLive_Mahjong_Library
                 semaphore.Release();
             }
 
+            /// <summary>
+            /// 发送玩家动作
+            /// </summary>
+            /// <param name="action"></param>
             public void SendPlayerAction(PlayerAction action)
             {
                 // 信号入队
@@ -93,6 +97,11 @@ namespace LoveLive_Mahjong_Library
                 // 释放信号量
                 semaphore.Release();
             }
+
+            /// <summary>
+            /// 清空玩家动作消息队列
+            /// </summary>
+            public void ClearAction() => queueActions.Clear();
 
             /// <summary>
             /// 传递一个退出状态到线程，令线程退出

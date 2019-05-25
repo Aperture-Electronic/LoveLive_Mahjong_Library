@@ -9,8 +9,15 @@ namespace LoveLive_Mahjong_Library
         private Thread gamingThread;
         public GameStatusMachine gameStatusMachine;
 
-        // 当前可供进行的玩家操作
+        /// <summary>
+        /// 当前可供进行的玩家操作
+        /// </summary>
         private IEnumerable<IGrouping<int, PlayerAction>> PlayerActionsList;
+
+        /// <summary>
+        /// 当前动作预备列表
+        /// </summary>
+        private readonly List<PlayerAction> PrepareActionsList = new List<PlayerAction>();
 
         /// <summary>
         /// 打开游戏进度主线程
@@ -42,13 +49,13 @@ namespace LoveLive_Mahjong_Library
                 // 等待信号量
                 gameStatusMachine.WaitSemaphore();
 
-                switch(gameStatusMachine.status)
+                switch (gameStatusMachine.status)
                 {
                     case GameStatusMachine.Status.Idle:
-                    
+
                         break;
                     case GameStatusMachine.Status.WaitPlayerOperation:
-                        
+
                         break;
                     case GameStatusMachine.Status.SendPlayerOperate:
                         // 创建响应
@@ -83,6 +90,12 @@ namespace LoveLive_Mahjong_Library
                             }
                         }
 
+                        // 清空动作预备列表
+                        PrepareActionsList.Clear();
+
+                        // 清空动作消息队列
+                        gameStatusMachine.ClearAction();
+
                         if ((RonAbles.Count > 0) || (Furuables.Count > 0))
                         {
                             // 保存可能的玩家操作列表
@@ -92,29 +105,56 @@ namespace LoveLive_Mahjong_Library
                             // 使用响应回调函数
                             PlayerActionResponseCallback(playerActions);
                         }
+
                         break;
                     case GameStatusMachine.Status.AcceptingPlayerOperation:
                         // 取出队列
                         PlayerAction action = gameStatusMachine.GetPlayerAction();
 
                         // 按照优先级处理
-                        // 1. 自摸
-                        // 2. 荣和
-                        if (action.actionType == PlayerActionType.Ron)
+
+                        // 查询是否有别的同或更高优先级动作
+                        IEnumerable<IGrouping<int, PlayerAction>> expected = from act in PlayerActionsList
+                                                                             where act.Key != action.playerId
+                                                                             select act;
+
+                        bool hasHhighPriorityAction = false;
+                        foreach (IGrouping<int, PlayerAction> player_acts in expected)
                         {
-                            // 查询是否有别的同或更高优先级动作
-                            // 选择其他玩家
-                            IEnumerable<IGrouping<int, PlayerAction>> expected = from act in PlayerActionsList
-                                                                                 where act.Key != action.playerId
-                                                                                 select act;
+                            // 查询高优先级的可能动作
+                            IEnumerable<PlayerAction> highPriorityActives = from act in player_acts
+                                                                            where act.Priority <= action.Priority
+                                                                            select act;
 
-                            foreach (IGrouping<int, PlayerAction> player_acts in expected)
+                            if (highPriorityActives.Count() > 0)
                             {
-                                IEnumerable<PlayerAction> highPriorityActives = from act in player_acts
-                                                                                where act.Priority <= action.Priority
-                                                                                select act;
-
+                                hasHhighPriorityAction = true;
                             }
+                        }
+
+                        if (hasHhighPriorityAction)
+                        {
+                            // 若有高优先级动作， 则将当前动作保存到预备列表，等待其他动作完成
+                            PrepareActionsList.Add(action);
+                        }
+                        else
+                        {
+                            // 若无高优先级动作，则当前动作是最终动作，向其他玩家发送拒绝指令
+                            // 并将拒绝指令添加到预备动作列表
+                            for (int player = 0; player < 4; player++)
+                            {
+                                if (player == action.playerId) continue;
+                                PlayerActionAcceptedCallback(player, false);
+                                PrepareActionsList.Add(new PlayerAction(player)
+                                {
+                                    actionType = PlayerActionType.Cancel,
+                                });
+                            }
+                        }
+
+                        if (PrepareActionsList.Count >= 3)
+                        {
+
                         }
 
                         break;
