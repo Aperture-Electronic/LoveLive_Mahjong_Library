@@ -12,7 +12,7 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 当前可供进行的玩家操作
         /// </summary>
-        private IEnumerable<IGrouping<int, PlayerAction>> PlayerActionsList;
+        private List<IGrouping<int, PlayerAction>> PlayerActionsList;
 
         /// <summary>
         /// 当前动作预备列表
@@ -40,9 +40,6 @@ namespace LoveLive_Mahjong_Library
 
         private void GamingThread()
         {
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-
             // 多线程状态机
             for (; ; )
             {
@@ -99,62 +96,72 @@ namespace LoveLive_Mahjong_Library
                         if ((RonAbles.Count > 0) || (Furuables.Count > 0))
                         {
                             // 保存可能的玩家操作列表
-                            PlayerActionsList = from act in playerActions group act by act.playerId into g select g;
+                            PlayerActionsList = (from act in playerActions group act by act.playerId into g select g).ToList();
 
                             // 获得用户响应，将向其他用户广播其响应
                             // 使用响应回调函数
                             PlayerActionResponseCallback(playerActions);
                         }
 
+                        // 进入接受用户响应的状态
+                        gameStateMachine.SetStatus(GameStateMachine.Status.AcceptingPlayerOperation);
+
                         break;
                     case GameStateMachine.Status.AcceptingPlayerOperation:
                         // 取出队列
                         PlayerAction action = gameStateMachine.GetPlayerAction();
 
-                        // 按照优先级处理
+                        // 加入动作列表
+                        PrepareActionsList.Add(action);
 
-                        // 查询是否有别的同或更高优先级动作
-                        IEnumerable<IGrouping<int, PlayerAction>> expected = from act in PlayerActionsList
-                                                                             where act.Key != action.playerId
-                                                                             select act;
+                        // 从可用列表中删除所有该玩家其他操作
+                        PlayerActionsList.RemoveAll((match) => match.Key == action.playerId);
 
-                        bool hasHhighPriorityAction = false;
-                        foreach (IGrouping<int, PlayerAction> player_acts in expected)
+                        // 遍历其他所有动作进行优先级比对
+                        bool isHighestPriority = true;
+                        foreach (IGrouping<int, PlayerAction> player in PlayerActionsList)
                         {
-                            // 查询高优先级的可能动作
-                            IEnumerable<PlayerAction> highPriorityActives = from act in player_acts
-                                                                            where act.Priority <= action.Priority
-                                                                            select act;
-
-                            if (highPriorityActives.Count() > 0)
+                            foreach (PlayerAction player_act in player)
                             {
-                                hasHhighPriorityAction = true;
-                            }
-                        }
-
-                        if (hasHhighPriorityAction)
-                        {
-                            // 若有高优先级动作， 则将当前动作保存到预备列表，等待其他动作完成
-                            PrepareActionsList.Add(action);
-                        }
-                        else
-                        {
-                            // 若无高优先级动作，则当前动作是最终动作，向其他玩家发送拒绝指令
-                            // 并将拒绝指令添加到预备动作列表
-                            for (int player = 0; player < 4; player++)
-                            {
-                                if (player == action.playerId) continue;
-                                PlayerActionAcceptedCallback(player, false);
-                                PrepareActionsList.Add(new PlayerAction(player)
+                                if (player_act.Priority <= action.Priority)
                                 {
-                                    actionType = PlayerActionType.Cancel,
-                                });
+                                    isHighestPriority = false;
+                                    break;
+                                }
                             }
+                            if (isHighestPriority) break;
                         }
 
-                        if (PrepareActionsList.Count >= 3)
+                        if (isHighestPriority || (PlayerActionsList.Count == 0))
                         {
+                            // 最高优先级
+                            // 关闭动作通道
+                            gameStateMachine.ClosePlayerActionChannel();
 
+                            // 处理动作列表
+                            int highestPriority = PrepareActionsList.Min((selector) => (selector.Priority));
+                            IEnumerable<PlayerAction> accept_list = PrepareActionsList.FindAll((match) => match.Priority == highestPriority);
+                            IEnumerable<PlayerAction> refuse_list = PrepareActionsList.Except(accept_list);
+
+                            foreach(PlayerAction act in accept_list)
+                            {
+                                // 接受这些请求
+                                PlayerActionAcceptedCallback(act.playerId, true);
+                            }
+
+                            foreach(PlayerAction act in refuse_list)
+                            {
+                                // 拒绝/取消这些请求
+                                PlayerActionAcceptedCallback(act.playerId, false);
+                            }
+
+                            // 将没有反应（被忽略）的玩家拒绝
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (i == Playing) continue;
+                                if (PrepareActionsList.FindIndex((match) => match.playerId == i) < 0)
+                                    PlayerActionAcceptedCallback(i, false);
+                            }
                         }
 
                         break;

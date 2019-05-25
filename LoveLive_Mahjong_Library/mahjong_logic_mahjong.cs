@@ -1010,7 +1010,6 @@ namespace LoveLive_Mahjong_Library
                                 type = FuruType.Kong,
                             });
                             hasPongKong = true;
-                            break;
                         }
                     }
                 }

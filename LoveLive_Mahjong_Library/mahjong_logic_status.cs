@@ -79,8 +79,12 @@ namespace LoveLive_Mahjong_Library
             {
                 if (status == Status.Exit) throw new Exception($"不可以直接中断线程, 请调用{nameof(DirectlyExit)}()函数。");
                 this.status = status;
-                semaphore.Release();
             }
+
+            /// <summary>
+            /// 强制释放一个信号量
+            /// </summary>
+            public void ReleaseSemaphore() => semaphore.Release();
 
             /// <summary>
             /// 玩家动作通道状态

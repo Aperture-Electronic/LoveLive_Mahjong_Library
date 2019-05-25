@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
 
 namespace UnitTestMahjong
 {
@@ -94,20 +95,10 @@ namespace UnitTestMahjong
         }
 
         [TestMethod]
-        public void TestGaming()
-        {
-            LoveLive_MahjongClass.InitializeMahjongClass();
-
-            MahjongLogic mahjongLogic = new MahjongLogic();
-
-            mahjongLogic.StartGamingThread();
-
-            mahjongLogic.gameStateMachine.DirectlyExit();
-        }
-
-        [TestMethod]
         public void TestFuruRon()
         {
+            Semaphore semaphore = new Semaphore(0, 4);
+
             LoveLive_MahjongClass.InitializeMahjongClass();
 
             MahjongLogic mahjongLogic = new MahjongLogic();
@@ -127,7 +118,7 @@ namespace UnitTestMahjong
                 LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby),
             };
 
-            // 玩家A（等待吃Ruby（年级））
+            // 玩家B（等待吃Ruby（年级））
             mahjongLogic.player_info[1].card_onhand = new List<MahjongCard>()
             {
                 LoveLive_MahjongClass.GetCard(MahjongCardName.Yoshiko),
@@ -140,22 +131,39 @@ namespace UnitTestMahjong
             // 当前D （打出了Ruby）
             mahjongLogic.player_info[3].card_played.Add(LoveLive_MahjongClass.GetCard(MahjongCardName.Ruby));
 
-            // 判断荣和
-            MethodInfo method = mahjongLogic.GetType().GetMethod("isCanRon", BindingFlags.NonPublic | BindingFlags.Instance);
-            List<RonAble> ronable = method.Invoke(mahjongLogic, null) as List<RonAble>;
-            method = mahjongLogic.GetType().GetMethod("isCanFuru", BindingFlags.NonPublic | BindingFlags.Instance);
-            List<FuruAble> furuable = method.Invoke(mahjongLogic, null) as List<FuruAble>;
-
-            foreach (var ron in ronable)
+            // 设置回调
+            mahjongLogic.PlayerActionResponseCallback = delegate (List<PlayerAction> actions)
             {
-                Trace.WriteLine($"ローン！{ron.RonCard}");
-            }
+                foreach(PlayerAction act in actions)
+                {
+                    Trace.WriteLine(act.ToString());
+                }
+                semaphore.Release();
+            };
 
-            foreach (var furu in furuable)
+            mahjongLogic.PlayerActionAcceptedCallback = delegate (int playerId, bool accept)
             {
-                foreach (var e in furu.FuruableList)
-                    Trace.WriteLine($"{e.type}");
-            }
+                Trace.WriteLine($"ID = {playerId}, Accept = {accept}");
+                semaphore.Release();
+            };
+
+            // 强行设定状态机
+            mahjongLogic.StartGamingThread();
+            mahjongLogic.gameStateMachine.SetStatus(MahjongLogic.GameStateMachine.Status.SendPlayerOperate);
+            mahjongLogic.gameStateMachine.ReleaseSemaphore();
+
+            // 等待回调执行完毕后再继续
+            semaphore.WaitOne();
+
+            // 模拟发送消息
+            mahjongLogic.SendPlayerAction(new PlayerAction(2) { actionType = PlayerActionType.Cancel });
+            mahjongLogic.SendPlayerAction(new PlayerAction(1) { actionType = PlayerActionType.Cancel });
+            mahjongLogic.SendPlayerAction(new PlayerAction(0) { actionType = PlayerActionType.Pong });
+
+            // 等待回调执行完毕后再继续
+            semaphore.WaitOne();
+            semaphore.WaitOne();
+            semaphore.WaitOne();
         }
     }
 }

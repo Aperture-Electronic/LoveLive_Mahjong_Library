@@ -904,5 +904,10 @@ namespace LoveLive_Mahjong_Library
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return $"PlayerId = {playerId}, ActionType = {Enum.GetName(typeof(PlayerActionType), actionType)}";
+        }
     }
 }
