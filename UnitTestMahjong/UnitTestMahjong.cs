@@ -140,7 +140,7 @@ namespace UnitTestMahjong
                 }
                 semaphore.Release();
             };
-
+            
             mahjongLogic.PlayerActionAcceptedCallback = delegate (int playerId, bool accept)
             {
                 Trace.WriteLine($"ID = {playerId}, Accept = {accept}");
