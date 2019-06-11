@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{419C77B1-1165-472C-A300-6A2D7FC7100A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ClientTestMahjong</RootNamespace>
+    <AssemblyName>ClientTestMahjong</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="mahjong.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>mahjong.resx</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="mahjong.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>mahjong.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ai.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Anju.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Aqours.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ARISE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ayu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Chika.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Eli.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Emma.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Erena.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hanamaru.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hanayo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Honoka.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Kanan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Kanata.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Karin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Kasumi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Kotori.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Maki.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mari.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Muse.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nijigasaki.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nozomi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ria.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Riko.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Rin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Rina.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ruby.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SaintSnow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Seira.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Setsuna.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shizuku.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tsubasa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Umi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Yoshiko.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\You.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LoveLive_Mahjong_Library\LoveLive_Mahjong_Library.csproj">
+      <Project>{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}</Project>
+      <Name>LoveLive_Mahjong_Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -67,9 +67,21 @@ namespace LoveLive_Mahjong_Library
     /// </summary>
     public enum MahjongCardType
     {
+        /// <summary>
+        /// 角色
+        /// </summary>
         Char,
+        /// <summary>
+        /// 团体
+        /// </summary>
         Group,
+        /// <summary>
+        /// 应援
+        /// </summary>
         Assist,
+        /// <summary>
+        /// 应援团体
+        /// </summary>
         Assgp,
     }
 

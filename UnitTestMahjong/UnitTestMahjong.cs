@@ -149,7 +149,7 @@ namespace UnitTestMahjong
 
             // 强行设定状态机
             mahjongLogic.StartGamingThread();
-            mahjongLogic.gameStateMachine.SetStatus(MahjongLogic.GameStateMachine.Status.SendPlayerOperate);
+            mahjongLogic.gameStateMachine.SetState(MahjongLogic.GameStateMachine.State.SendPlayerAction);
             mahjongLogic.gameStateMachine.ReleaseSemaphore();
 
             // 等待回调执行完毕后再继续
@@ -157,7 +157,7 @@ namespace UnitTestMahjong
 
             // 模拟发送消息
             mahjongLogic.SendPlayerAction(new PlayerAction(2) { actionType = PlayerActionType.Cancel });
-            mahjongLogic.SendPlayerAction(new PlayerAction(1) { actionType = PlayerActionType.Cancel });
+            //mahjongLogic.SendPlayerAction(new PlayerAction(1) { actionType = PlayerActionType.Cancel });
             mahjongLogic.SendPlayerAction(new PlayerAction(0) { actionType = PlayerActionType.Pong });
 
             // 等待回调执行完毕后再继续

@@ -28,7 +28,7 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 游戏场次
         /// </summary>
-        private MahjongGame game;
+        public MahjongGame game { get; private set; }
 
         /// <summary>
         /// 总场次
@@ -36,9 +36,14 @@ namespace LoveLive_Mahjong_Library
         private MahjongGame total_game;
 
         /// <summary>
-        /// 局和本场
+        /// 局
         /// </summary>
-        private int scene, subscene;
+        public int scene { get; private set; }
+
+        /// <summary>
+        /// 本场
+        /// </summary>
+        public int subscene {get; private set;}
 
         /// <summary>
         /// 开杠总数
@@ -63,17 +68,17 @@ namespace LoveLive_Mahjong_Library
         /// <summary>
         /// 牌的总数（来自数据库）
         /// </summary>
-        private int total_cards => LoveLive_MahjongClass.CardInfo.Count;
+        private int total_cards => LoveLive_MahjongClass.CardInfo.Count * 4;
 
         /// <summary>
         /// 每局共计巡数（0~75）
         /// 牌总数 - 开局配牌13张 * 4人 - 庄家1张 - 岭上4张宝牌指示牌10张共14张
         /// </summary>
-        private int total_rounds => total_cards - 13 * 4 - 1 - 14;
+        public int total_rounds => total_cards - 13 * 4 - 1 - 14;
 
         /// <summary>
         /// 当前巡数
         /// </summary>
-        private int round;
+        public int round { get; private set; }
     }
 }

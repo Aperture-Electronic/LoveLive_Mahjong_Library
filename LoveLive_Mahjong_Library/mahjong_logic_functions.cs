@@ -92,6 +92,9 @@ namespace LoveLive_Mahjong_Library
             // 从牌山中删除这张牌
             card_stacks.RemoveAt(0);
 
+            // 只要摸牌就加巡数
+            round++;
+
             // 返回所需的牌
             return card;
         }
@@ -205,10 +208,36 @@ namespace LoveLive_Mahjong_Library
         private void _RidgeTopCards()
         {
             // 第一张表宝牌指示牌是倒数第6张牌
-            int j = total_cards - 6 + 2 * card_indicator.Count;
+            int j = card_stacks.Count - 6 + 2 * card_indicator.Count;
 
             // 添加宝牌指示牌
             _add_treasure_card(card_stacks[j]);
+        }
+
+        /// <summary>
+        /// 跳转到下一玩家
+        /// </summary>
+        private void _NextPlayer()
+        {
+            // 跳转
+            playing++;
+            if (playing == 4) playing = 0;
+
+            // 摸牌
+            player_info[Playing].AddHandCard(TouchCard());
+        }
+
+        /// <summary>
+        /// 跳转到相应玩家
+        /// </summary>
+        /// <param name="Player">玩家</param>
+        private void _ToPlayer(int Player)
+        {
+            // 跳转
+            int p = order.ToList().IndexOf(Player);
+            playing = p;
+
+            // 不摸牌
         }
     }
 }

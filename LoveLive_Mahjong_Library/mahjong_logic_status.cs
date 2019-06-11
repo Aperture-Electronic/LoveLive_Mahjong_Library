@@ -11,7 +11,7 @@ namespace LoveLive_Mahjong_Library
 
         public class GameStateMachine
         {
-            public enum Status
+            public enum State
             {
                 // 无操作状态
                 Idle,
@@ -19,17 +19,22 @@ namespace LoveLive_Mahjong_Library
                 /// <summary>
                 /// 向玩家请求操作
                 /// </summary>
-                SendPlayerOperate,
+                SendPlayerAction,
 
                 /// <summary>
                 /// 等待玩家操作
                 /// </summary>
-                WaitPlayerOperation,
+                WaitPlayerAction,
 
                 /// <summary>
                 /// 接受玩家操作
                 /// </summary>
-                AcceptingPlayerOperation,
+                AcceptingPlayerAction,
+
+                /// <summary>
+                /// 执行玩家操作
+                /// </summary>
+                ExecutePlayerAction,
 
                 /// <summary>
                 /// 退出
@@ -40,7 +45,7 @@ namespace LoveLive_Mahjong_Library
             /// <summary>
             /// 当前状态机状态
             /// </summary>
-            public Status status { get; private set; }
+            public State status { get; private set; }
             private Semaphore semaphore;
             private Queue<PlayerAction> queueActions;
 
@@ -68,21 +73,21 @@ namespace LoveLive_Mahjong_Library
                 queueActions = new Queue<PlayerAction>();
 
                 // 重置状态
-                status = Status.Idle;
+                status = State.Idle;
             }
 
             /// <summary>
             /// 传递一个新的状态到线程
             /// </summary>
             /// <param name="status">新状态</param>
-            public void SetStatus(Status status)
+            public void SetState(State status)
             {
-                if (status == Status.Exit) throw new Exception($"不可以直接中断线程, 请调用{nameof(DirectlyExit)}()函数。");
+                if (status == State.Exit) throw new Exception($"不可以直接中断线程, 请调用{nameof(DirectlyExit)}()函数。");
                 this.status = status;
             }
 
             /// <summary>
-            /// 强制释放一个信号量
+            /// 释放一个信号量
             /// </summary>
             public void ReleaseSemaphore() => semaphore.Release();
 
@@ -104,7 +109,7 @@ namespace LoveLive_Mahjong_Library
                     queueActions.Enqueue(action);
 
                     // 处理状态
-                    status = Status.AcceptingPlayerOperation;
+                    status = State.AcceptingPlayerAction;
 
                     // 释放信号量
                     semaphore.Release();
@@ -151,7 +156,7 @@ namespace LoveLive_Mahjong_Library
             /// </summary>
             public void DirectlyExit()
             {
-                status = Status.Exit;
+                status = State.Exit;
 
                 // 释放信号量
                 semaphore.Release();

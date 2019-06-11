@@ -995,7 +995,7 @@ namespace LoveLive_Mahjong_Library
                         // 可以碰
                         furuAble.FuruableList.Add(new MahjongCardFuru()
                         {
-                            cards = Enumerable.Repeat(last_played, 3).ToList(),
+                            cards = Enumerable.Repeat(last_played, 2).ToList(),
                             target = Playing,
                             type = FuruType.Pong,
                         });
@@ -1005,7 +1005,7 @@ namespace LoveLive_Mahjong_Library
                             // 可以杠
                             furuAble.FuruableList.Add(new MahjongCardFuru()
                             {
-                                cards = Enumerable.Repeat(last_played, 4).ToList(),
+                                cards = Enumerable.Repeat(last_played, 3).ToList(),
                                 target = Playing,
                                 type = FuruType.Kong,
                             });
@@ -1014,58 +1014,64 @@ namespace LoveLive_Mahjong_Library
                     }
                 }
 
-                // 年级和小组顺子（吃）
-                // 年级顺子
-                MahjongCardName name = last_played.name;
-                MahjongCardGradeType grade = last_played.grade;
-                IEnumerable<IGrouping<MahjongCardName, MahjongCard>> grade_chi = from card in player_hand
-                                                                                 where (card.grade == grade) && (card.name != name)
-                                                                                 group card by card.name into g
-                                                                                 select g;
-                if (grade_chi.Count() == 2)
+
+                if (last_played.type == MahjongCardType.Char)
                 {
-                    // 至少要有两种同年级的牌才可以吃
-                    // 获得要吃的牌
-                    List<MahjongCard> chi = new List<MahjongCard>();
-                    foreach (IGrouping<MahjongCardName, MahjongCard> cards in grade_chi)
+                    // 年级和小组顺子（吃）
+                    // 年级顺子
+                    MahjongCardName name = last_played.name;
+                    MahjongCardGradeType grade = last_played.grade;
+                    MahjongCardGroupType group = last_played.group;
+                    IEnumerable<IGrouping<MahjongCardName, MahjongCard>> grade_chi = from card in player_hand
+                                                                                     where (card.grade == grade) && (card.name != name) &&
+                                                                                        (card.type == MahjongCardType.Char) && (card.@group == @group)
+                                                                                     group card by card.name into g
+                                                                                     select g;
+                    if (grade_chi.Count() == 2)
                     {
-                        chi.Add(cards.First());
+                        // 至少要有两种同年级的牌才可以吃
+                        // 获得要吃的牌
+                        List<MahjongCard> chi = new List<MahjongCard>();
+                        foreach (IGrouping<MahjongCardName, MahjongCard> cards in grade_chi)
+                        {
+                            chi.Add(cards.First());
+                        }
+
+                        // 加入可副露列表
+                        furuAble.FuruableList.Add(new MahjongCardFuru()
+                        {
+                            cards = chi,
+                            target = Playing,
+                            type = FuruType.ChiGrade,
+                        });
                     }
 
-                    // 加入可副露列表
-                    furuAble.FuruableList.Add(new MahjongCardFuru()
+                    // 小组顺子
+                    MahjongCardSquadType squad = last_played.squad;
+                    IEnumerable<IGrouping<MahjongCardName, MahjongCard>> squad_chi = from card in player_hand
+                                                                                     where (card.squad == squad) && (card.name != name) && (card.type == MahjongCardType.Char)
+                                                                                     group card by card.name into g
+                                                                                     select g;
+                    if (squad_chi.Count() == 2)
                     {
-                        cards = chi,
-                        target = Playing,
-                        type = FuruType.ChiGrade,
-                    });
-                }
+                        // 至少要有两种同小组的牌才可以吃
+                        // 获得要吃的牌
+                        List<MahjongCard> chi = new List<MahjongCard>();
+                        foreach (IGrouping<MahjongCardName, MahjongCard> cards in squad_chi)
+                        {
+                            chi.Add(cards.First());
+                        }
 
-                // 小组顺子
-                MahjongCardSquadType squad = last_played.squad;
-                IEnumerable<IGrouping<MahjongCardName, MahjongCard>> squad_chi = from card in player_hand
-                                                                                 where (card.squad == squad) && (card.name != name)
-                                                                                 group card by card.name into g
-                                                                                 select g;
-                if (squad_chi.Count() == 2)
-                {
-                    // 至少要有两种同小组的牌才可以吃
-                    // 获得要吃的牌
-                    List<MahjongCard> chi = new List<MahjongCard>();
-                    foreach (IGrouping<MahjongCardName, MahjongCard> cards in squad_chi)
-                    {
-                        chi.Add(cards.First());
+                        // 加入可副露列表
+                        furuAble.FuruableList.Add(new MahjongCardFuru()
+                        {
+                            cards = chi,
+                            target = Playing,
+                            type = FuruType.ChiSquad,
+                        });
                     }
 
-                    // 加入可副露列表
-                    furuAble.FuruableList.Add(new MahjongCardFuru()
-                    {
-                        cards = chi,
-                        target = Playing,
-                        type = FuruType.ChiSquad,
-                    });
                 }
-
                 furuAbles.Add(furuAble);
             }
 
@@ -1109,6 +1115,32 @@ namespace LoveLive_Mahjong_Library
             }
 
             return ronAbles;
+        }
+
+        /// <summary>
+        /// 转换用户动作到副露类型
+        /// </summary>
+        /// <param name="playerAction">用户动作</param>
+        /// <returns></returns>
+        private FuruType ActionTypeToFuruType(PlayerActionType playerAction)
+        {
+            switch (playerAction)
+            {
+                case PlayerActionType.ChiGrade:
+                    return FuruType.ChiGrade;
+                case PlayerActionType.ChiSquad:
+                    return FuruType.ChiSquad;
+                case PlayerActionType.Pong:
+                    return FuruType.Pong;
+                case PlayerActionType.Kong:
+                    return FuruType.Kong;
+                case PlayerActionType.Kong_Self:
+                    return FuruType.Kong_Self;
+                case PlayerActionType.Kong_Add:
+                    return FuruType.Kong_Add;
+                default:
+                    return FuruType.Pong;
+            }
         }
     }
 }

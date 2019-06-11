@@ -51,7 +51,7 @@ namespace LoveLive_Mahjong_Library
         }
 
         /// <summary>
-        /// 获得当前出牌的玩家
+        /// 获得当前出牌的玩家（玩家编号）
         /// </summary>
         public int Playing => order[playing];
 
@@ -106,7 +106,8 @@ namespace LoveLive_Mahjong_Library
                 GetPlayerInfo(player).PlayCard(card_to_play.First());
 
                 // 向游戏线程发送完成请求
-                gameStateMachine.SetStatus(GameStateMachine.Status.SendPlayerOperate);
+                gameStateMachine.SetState(GameStateMachine.State.SendPlayerAction);
+                gameStateMachine.ReleaseSemaphore();
 
                 return true;
             }

@@ -20,6 +20,11 @@ namespace LoveLive_Mahjong_Library
         private readonly List<PlayerAction> PrepareActionsList = new List<PlayerAction>();
 
         /// <summary>
+        /// 当前已接受操作
+        /// </summary>
+        private List<PlayerAction> AcceptedPlayerActions = new List<PlayerAction>();
+
+        /// <summary>
         /// 打开游戏进度主线程
         /// </summary>
         public void StartGamingThread()
@@ -48,13 +53,13 @@ namespace LoveLive_Mahjong_Library
 
                 switch (gameStateMachine.status)
                 {
-                    case GameStateMachine.Status.Idle:
+                    case GameStateMachine.State.Idle:
 
                         break;
-                    case GameStateMachine.Status.WaitPlayerOperation:
+                    case GameStateMachine.State.WaitPlayerAction:
 
                         break;
-                    case GameStateMachine.Status.SendPlayerOperate:
+                    case GameStateMachine.State.SendPlayerAction:
                         // 创建响应
                         List<PlayerAction> playerActions = new List<PlayerAction>();
 
@@ -93,7 +98,7 @@ namespace LoveLive_Mahjong_Library
                         // 打开玩家动作通道
                         gameStateMachine.OpenPlayerActionChannel();
 
-                        if ((RonAbles.Count > 0) || (Furuables.Count > 0))
+                        if (playerActions.Count > 0)
                         {
                             // 保存可能的玩家操作列表
                             PlayerActionsList = (from act in playerActions group act by act.playerId into g select g).ToList();
@@ -101,13 +106,19 @@ namespace LoveLive_Mahjong_Library
                             // 获得用户响应，将向其他用户广播其响应
                             // 使用响应回调函数
                             PlayerActionResponseCallback(playerActions);
+
+                            // 进入接受用户响应的状态
+                            gameStateMachine.SetState(GameStateMachine.State.AcceptingPlayerAction);
                         }
-
-                        // 进入接受用户响应的状态
-                        gameStateMachine.SetStatus(GameStateMachine.Status.AcceptingPlayerOperation);
-
+                        else
+                        {
+                            // 进入用户响应执行状态（跳过）
+                            AcceptedPlayerActions.Clear();
+                            gameStateMachine.SetState(GameStateMachine.State.ExecutePlayerAction);
+                            gameStateMachine.ReleaseSemaphore();
+                        }
                         break;
-                    case GameStateMachine.Status.AcceptingPlayerOperation:
+                    case GameStateMachine.State.AcceptingPlayerAction:
                         // 取出队列
                         PlayerAction action = gameStateMachine.GetPlayerAction();
 
@@ -123,7 +134,7 @@ namespace LoveLive_Mahjong_Library
                         {
                             foreach (PlayerAction player_act in player)
                             {
-                                if (player_act.Priority <= action.Priority)
+                                if (player_act.Priority < action.Priority)
                                 {
                                     isHighestPriority = false;
                                     break;
@@ -140,10 +151,12 @@ namespace LoveLive_Mahjong_Library
 
                             // 处理动作列表
                             int highestPriority = PrepareActionsList.Min((selector) => (selector.Priority));
-                            IEnumerable<PlayerAction> accept_list = PrepareActionsList.FindAll((match) => match.Priority == highestPriority);
+                            IEnumerable<PlayerAction> accept_list = PrepareActionsList.FindAll((match) => (match.Priority == highestPriority) && (match.actionType != PlayerActionType.Cancel));
                             IEnumerable<PlayerAction> refuse_list = PrepareActionsList.Except(accept_list);
 
-                            foreach(PlayerAction act in accept_list)
+                            AcceptedPlayerActions = accept_list.ToList();
+
+                            foreach (PlayerAction act in accept_list)
                             {
                                 // 接受这些请求
                                 PlayerActionAcceptedCallback(act.playerId, true);
@@ -162,10 +175,83 @@ namespace LoveLive_Mahjong_Library
                                 if (PrepareActionsList.FindIndex((match) => match.playerId == i) < 0)
                                     PlayerActionAcceptedCallback(i, false);
                             }
+
+                            // 进入执行玩家操作状态
+                            gameStateMachine.SetState(GameStateMachine.State.ExecutePlayerAction);
+                            gameStateMachine.ReleaseSemaphore();
                         }
 
                         break;
-                    case GameStateMachine.Status.Exit:
+                    case GameStateMachine.State.ExecutePlayerAction:
+                        if (AcceptedPlayerActions.Count == 0)
+                        {
+                            // 没有接受的操作，直接跳转到下家
+                            _NextPlayer();
+
+                            gameStateMachine.SetState(GameStateMachine.State.Idle);
+                        }
+                        else
+                        {
+                            foreach (PlayerAction act in AcceptedPlayerActions)
+                            {
+                                switch (act.actionType)
+                                {
+                                    case PlayerActionType.Ron:
+                                    case PlayerActionType.Tsumo:
+                                        // 和牌
+
+                                        break;
+                                    case PlayerActionType.ChiGrade:
+                                    case PlayerActionType.ChiSquad:
+                                    case PlayerActionType.Pong:
+                                    case PlayerActionType.Kong:
+                                    case PlayerActionType.Kong_Self:
+                                    case PlayerActionType.Kong_Add:
+                                        // 副露
+                                        // 获得刚刚打牌的玩家的牌河和打出的牌
+                                        List<MahjongCard> played_cards = GetPlayerCardPlayed(Playing);
+                                        MahjongCard last_played = played_cards.Last(); // 最后一张
+
+                                        // 副露对象和副露者
+                                        int target = Playing;
+                                        int furu_player = act.playerId;
+
+                                        // 新的副露
+                                        MahjongCardFuru furu = new MahjongCardFuru()
+                                        {
+                                            target = target,
+                                            type = ActionTypeToFuruType(act.actionType),
+                                           cards = new List<MahjongCard>(),
+                                        };
+
+                                        // 组成副露牌组
+                                        foreach(MahjongCard card in act.effectCards)
+                                        {
+                                            furu.cards.Add(card);
+
+                                            // 从手牌中删除
+                                            player_info[furu_player].card_onhand.Remove(card);
+                                        }
+
+                                        furu.cards.Add(last_played);
+
+                                        // 添加到玩家副露
+                                        player_info[furu_player].card_furu.Add(furu);
+
+                                        // 从目标玩家牌河删除
+                                        player_info[target].card_played.RemoveAt(player_info[target].card_played.Count - 1);
+
+                                        // 直接跳转到副露家
+                                        _ToPlayer(furu_player);
+
+                                        gameStateMachine.SetState(GameStateMachine.State.Idle);
+
+                                        break;
+                                }
+                            }
+                        }
+                        break;
+                    case GameStateMachine.State.Exit:
                         return;
                 }
             }

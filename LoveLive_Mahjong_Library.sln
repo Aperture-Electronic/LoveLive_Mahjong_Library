@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestMahjong", "UnitTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoveLive_Mahjong_Library", "LoveLive_Mahjong_Library\LoveLive_Mahjong_Library.csproj", "{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTestMahjong", "ClientTestMahjong\ClientTestMahjong.csproj", "{419C77B1-1165-472C-A300-6A2D7FC7100A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC058CF5-0B73-4D0A-9BBE-D5112B13DCA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419C77B1-1165-472C-A300-6A2D7FC7100A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419C77B1-1165-472C-A300-6A2D7FC7100A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419C77B1-1165-472C-A300-6A2D7FC7100A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419C77B1-1165-472C-A300-6A2D7FC7100A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

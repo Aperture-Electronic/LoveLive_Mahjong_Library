@@ -1,0 +1,244 @@
+﻿<Window x:Class="ClientTestMahjong.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientTestMahjong"
+        mc:Ignorable="d"
+        Title="LoveLive Mahjong Client Test" Height="954" Width="1213" Background="#FF25512D">
+    <Grid x:Name="grdWindow">
+        <Menu VerticalAlignment="Top">
+            <MenuItem x:Name="mnuStartNew" Header="Start New" Click="MnuStartNew_Click"/>
+        </Menu>
+        <Grid x:Name="grdTable" Margin="11,110,0,0" Height="844" VerticalAlignment="Top" HorizontalAlignment="Left" Width="844">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="2" Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblPointSelf" Content="25000" Grid.Column="1" Grid.Row="2" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" BorderThickness="1" FontSize="16" Foreground="White"/>
+                    <Label x:Name="lblPointDownwind" Content="25000" Grid.Column="1" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Margin="61,12,-12,11" Grid.Row="1" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-90"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblPointUpwind" Content="25000" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Margin="-12,12,60,12" Grid.Row="1" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="90"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblPointOppsitewind" Content="25000" Grid.Column="1" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="180"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblWindSelf" Content="东" Grid.Column="2" Grid.Row="2" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="1" FontSize="16" Foreground="White"/>
+                    <Label x:Name="lblWindDownwind" Content="南" Grid.Column="2" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-90"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblWindUpwind" Content="北" Grid.Row="2" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="90"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblWindOppositewind" Content="南" FontFamily="Segoe UI" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderThickness="1" FontSize="16" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                        <Label.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="180"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Label.RenderTransform>
+                    </Label>
+                    <Label x:Name="lblScene" Content="东一局" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10" Margin="0,0,0,37" Foreground="White"/>
+                    <Label x:Name="lblSubScene" Content="0 本场" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,18" FontSize="10" Foreground="White"/>
+                    <Label x:Name="lblRound" Content="余 00" Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,36,0,0" FontSize="10" Foreground="White"/>
+                </Grid>
+                <Grid x:Name="grdActionSelf" HorizontalAlignment="Left" Height="38" Margin="38,89,0,0" Grid.Row="4" VerticalAlignment="Top" Width="468" Grid.ColumnSpan="5" RenderTransformOrigin="0.5,0.5">
+                    <Grid.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                    </Grid.Background>
+                </Grid>
+                <Grid x:Name="grdActionOppositewind" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="468" Grid.ColumnSpan="5" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="180"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Grid.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                    </Grid.Background>
+                </Grid>
+                <Grid x:Name="grdActionDownwind" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="467" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5" Grid.Column="2" Margin="86,46,-216,0" Grid.Row="2">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Grid.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                    </Grid.Background>
+                </Grid>
+                <Grid x:Name="grdActionUpwind" HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="467" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5" Margin="-215,85,0,0" Grid.Row="2">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Grid.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
+                    </Grid.Background>
+                </Grid>
+                <Grid x:Name="grdRiverSelf" Grid.Column="2" Grid.Row="3" Grid.RowSpan="2" Margin="0,0,0,38"/>
+                <Grid x:Name="grdRiverDownwind" Grid.Column="2" Grid.Row="2" Margin="150,19,18,19" Grid.ColumnSpan="3" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                </Grid>
+                <Grid x:Name="grdRiverOppositewind" Grid.Column="2" Margin="0,37,0,0" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="180"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                </Grid>
+                <Grid x:Name="grdRiverUpwind" Margin="19,19,150,19" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="3" Grid.Row="2">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                </Grid>
+            </Grid>
+            <Grid x:Name="grdHandcardSelf" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,2,0,-2"/>
+            <Grid x:Name="grdHandcardDownwind" Grid.Row="2" Grid.Column="2" Margin="0,0,-508,-2">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+            </Grid>
+            <Grid x:Name="grdHandcardOppositewind" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="180"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+            </Grid>
+            <Grid x:Name="grdHandcardUpwind" Margin="2,0,-4,336" Grid.ColumnSpan="2" Grid.Row="1" Grid.Column="1">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+            </Grid>
+        </Grid>
+        <Label Content="宝牌指示牌" Height="25" VerticalAlignment="Top" Margin="11,22,570,0" Foreground="White"/>
+        <Grid x:Name="grdTreasure" HorizontalAlignment="Left" Height="53" Margin="10,52,0,0" VerticalAlignment="Top" Width="200"/>
+        <Label Content="副露指示" Height="25" VerticalAlignment="Top" Margin="878,22,10,0" Foreground="White"/>
+        <Grid HorizontalAlignment="Left" Height="861" Margin="878,52,0,0" VerticalAlignment="Top" Width="317">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Label Content="东" Height="25" VerticalAlignment="Top" Foreground="White"/>
+            <Label Content="南" Height="25" VerticalAlignment="Top" Foreground="White" Grid.Row="1"/>
+            <Label Content="西" Height="25" VerticalAlignment="Top" Foreground="White" Grid.Row="2"/>
+            <Label Content="北" Height="25" VerticalAlignment="Top" Foreground="White" Grid.Row="3"/>
+            <Grid x:Name="grdFuruEast" Margin="0,25,0,0"/>
+            <Grid x:Name="grdFuruSouth" Margin="0,25,0,0" Grid.Row="1"/>
+            <Grid x:Name="grdFuruWest" Margin="0,25,0,1" Grid.Row="2"/>
+            <Grid x:Name="grdFuruNorth" Margin="0,25,0,0" Grid.Row="3"/>
+        </Grid>
+    </Grid>
+</Window>
